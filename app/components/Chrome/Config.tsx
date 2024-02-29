@@ -19,7 +19,7 @@ export const getPosition = (position: number) => {
   "worklet";
   return {
     x: position % COL === 0 ? 0 : SIZE * (position % COL),
-    y: (Math.floor(position / COL) * SIZE) / 3,
+    y: Math.floor(position / COL) * 70,
   };
 };
 
@@ -27,6 +27,6 @@ export const getOrder = (x: number, y: number) => {
   "worklet";
 
   const col = Math.round(x / SIZE);
-  const row = Math.round(y / SIZE);
-  return row * COL + col;
+  const row = Math.round(y / 70);
+  return row * COL;
 };

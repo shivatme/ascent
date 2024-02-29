@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import { StyleSheet } from "react-native";
-import { COL, Positions, SIZE } from "./Config";
+import { Positions, SIZE } from "./Config";
 import Item from "./Item";
 import Animated, {
   useAnimatedRef,
@@ -10,9 +10,12 @@ import Animated, {
 
 interface SortableListProps {
   children: ReactElement<{ id: string }>[];
+  COL?: number;
+  height: number;
+  // ROWS?: number;
 }
 
-function SortableList({ children }: SortableListProps) {
+function SortableList({ children, COL = 1, height }: SortableListProps) {
   const scrollView = useAnimatedRef<Animated.ScrollView>();
   const scrollY = useSharedValue(0);
   const position = useSharedValue<Positions>(
@@ -28,7 +31,7 @@ function SortableList({ children }: SortableListProps) {
     <Animated.ScrollView
       ref={scrollView}
       contentContainerStyle={{
-        height: (Math.ceil(children.length / COL) * SIZE) / 3,
+        height: Math.ceil(children.length / COL) * height + height,
       }}
       showsVerticalScrollIndicator={false}
       bounces={false}
@@ -43,6 +46,8 @@ function SortableList({ children }: SortableListProps) {
             positions={position}
             scrollView={scrollView}
             scrollY={scrollY}
+            COL={COL}
+            Height={height}
           >
             {child}
           </Item>

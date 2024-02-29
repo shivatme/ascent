@@ -7,7 +7,7 @@ interface AnalyticsScreenProps {}
 function AnalyticsScreen(props: AnalyticsScreenProps): JSX.Element {
   return (
     <Screen style={styles.container}>
-      <Text>Analytics</Text>
+      <Text>dsasd</Text>
     </Screen>
   );
 }

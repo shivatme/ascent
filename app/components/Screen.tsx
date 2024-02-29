@@ -17,10 +17,10 @@ function Screen({ children, style }: ScreenProps): JSX.Element {
 
 const styles = StyleSheet.create({
   screen: {
-    paddingTop: Constants.statusBarHeight,
     flex: 1,
   },
   view: {
+    paddingTop: Constants.statusBarHeight,
     flex: 1,
   },
 });

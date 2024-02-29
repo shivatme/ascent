@@ -4,9 +4,10 @@ import AppText from "./AppText";
 
 interface ListItemProps {
   title: string;
+  id: string;
 }
 
-function ListItem({ title, highLight }: ListItemProps): JSX.Element {
+function ListItem({ title }: ListItemProps): JSX.Element {
   //   console.log(highLight);
   return (
     <View style={styles.container}>

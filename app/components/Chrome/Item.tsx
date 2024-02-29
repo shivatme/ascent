@@ -1,9 +1,8 @@
 import React, { ReactNode } from "react";
 import { StyleSheet, Dimensions } from "react-native";
 import {
-  COL,
   Positions,
-  SIZE,
+  // SIZE,
   animationConfig,
   getOrder,
   getPosition,
@@ -26,10 +25,12 @@ import {
 
 interface ItemProps {
   children: ReactNode;
+  COL: number;
   id: string;
   positions: SharedValue<Positions>;
   scrollView: AnimatedRef<Animated.ScrollView>;
   scrollY: SharedValue<number>;
+  Height: number;
 }
 
 function Item({
@@ -38,12 +39,13 @@ function Item({
   id,
   scrollView,
   scrollY,
+  COL,
+  Height,
 }: ItemProps): JSX.Element {
   const inset = useSafeAreaInsets();
   const containerHeight =
     Dimensions.get("window").height - inset.top - inset.bottom;
-  const contentHeight =
-    ((Object.keys(positions.value).length / COL) * SIZE) / 3;
+  const contentHeight = (Object.keys(positions.value).length / COL) * Height;
 
   const position = getPosition(positions.value[id]);
   const isGestureActive = useSharedValue(false);
@@ -74,6 +76,7 @@ function Item({
 
       const oldOrder = positions.value[id];
       const newOrder = getOrder(translateX.value, translateY.value);
+      // console.log(newOrder);
       if (oldOrder !== newOrder) {
         const newPositions = JSON.parse(JSON.stringify(positions.value));
 
@@ -92,9 +95,9 @@ function Item({
           positions.value = newPositions;
         }
       }
-
       const lowerBound = scrollY.value;
-      const upperBound = lowerBound + containerHeight - SIZE;
+      const upperBound = lowerBound + containerHeight - 100;
+      // console.log(lowerBound);
       const maxScroll = contentHeight - containerHeight;
       const scrollLeft = maxScroll - scrollY.value;
 
@@ -128,17 +131,19 @@ function Item({
   const style = useAnimatedStyle(() => {
     const zIndex = isGestureActive.value ? 100 : 0;
     const scale = isGestureActive.value ? 1.1 : 1;
+    const opacity = isGestureActive.value ? 0.7 : 1;
     return {
       position: "absolute",
       top: 0,
       left: 0,
-      width: SIZE,
-      height: SIZE / 3,
+      width: "100%",
+      height: Height,
       zIndex,
+      opacity,
       transform: [
-        { translateX: translateX.value },
+        // { translateX: translateX.value },
         { translateY: translateY.value },
-        { scale },
+        // { scale },
       ],
     };
   });
