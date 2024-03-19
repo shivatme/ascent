@@ -2,8 +2,11 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/HomeScreen";
 import AnalyticsScreen from "../screens/AnalyticsScreen";
 import ExercisesScreen from "../screens/ExercisesScreen";
+import SettingsScreen from "../screens/SettingsScreen";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import BodyDataScreen from "../screens/BodyDataScreen";
+import CalendarScreen from "../screens/CalendarScreen";
+import WorkoutPlanningScreen from "../screens/WorkoutPlanningScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -35,7 +38,7 @@ function AppNavigator(): JSX.Element {
       />
       <Tab.Screen
         name="Analytics"
-        component={AnalyticsScreen}
+        component={WorkoutPlanningScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
@@ -58,6 +61,15 @@ function AppNavigator(): JSX.Element {
       <Tab.Screen
         name="Body Data"
         component={BodyDataScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="account" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Calendar"
+        component={CalendarScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account" size={size} color={color} />

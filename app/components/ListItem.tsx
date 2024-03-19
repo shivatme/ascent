@@ -1,20 +1,23 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import AppText from "./AppText";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface ListItemProps {
   title: string;
   id: string;
 }
 
-function ListItem({ title }: ListItemProps): JSX.Element {
+function ListItem({ title, id }: ListItemProps): JSX.Element {
   //   console.log(highLight);
   return (
-    <View style={styles.container}>
-      <AppText numberOfLines={1} style={styles.title}>
-        {title}
-      </AppText>
-    </View>
+    <TouchableOpacity onPress={() => console.log(id)}>
+      <View style={styles.container}>
+        <AppText numberOfLines={1} style={styles.title}>
+          {title}
+        </AppText>
+      </View>
+    </TouchableOpacity>
   );
 }
 

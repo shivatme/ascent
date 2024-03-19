@@ -1,5 +1,5 @@
-import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, Text, TextInput, Button } from "react-native";
 import Screen from "../components/Screen";
 import AppText from "../components/AppText";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -7,18 +7,80 @@ import SortableList from "../components/Chrome/SortableList";
 
 import ListItem from "../components/ListItem";
 import ListItem2 from "../components/ListItem2";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import * as SQLite from "expo-sqlite";
+import { v4 as uuidv4 } from "uuid";
 
-interface HomeScreenProps {}
-function HomeScreen(props: HomeScreenProps): JSX.Element {
+interface HomeScreenProps {
+  navigation: any;
+}
+function HomeScreen({ navigation }: HomeScreenProps): JSX.Element {
+  // const db = SQLite.openDatabase("UserData.db");
+  const [isLoading, setIsLoading] = useState(true);
+  const [routines, setRoutines] = useState([]);
+  const [currentRoutineName, setCurrentroutineName] = useState("");
+
+  const addRoutine = () => {
+    if (currentRoutineName) {
+      // console.log(currentRoutineName);
+      // db.transaction((tx) => {
+      //   tx.executeSql(
+      //     `INSERT INTO routines (id, name) VALUES (?, ?)`,
+      //     [currentRoutineName, currentRoutineName],
+      //     (txObj, resultSet) => {
+      //       console.log(currentRoutineName);
+      console.log(currentRoutineName);
+      //       setCurrentroutineName("");
+      //     },
+      //     (txObj, error) => {
+      //       console.log(error);
+      //       // console.log(currentRoutineName);
+      //       return false;
+      //     }
+      //   );
+      // });
+    }
+  };
+
+  // let existingNames = [...routines];
+  // existingNames.push({
+  //   id: resultSet.insertId,
+  //   name: currentRoutineName,
+  // });
+  // setRoutines(existingNames);
+
+  // const deleteRoutine = (id: number) => {
+  //   console.log(id, "aaa");
+  //   db.transaction((tx) => {
+  //     tx.executeSql(
+  //       "DELETE FROM names WHERE id = ? ",
+  //       [id],
+  //       (txObj, resultSet) => {
+  //         if (resultSet.rowsAffected > 0) {
+  //           let existingNames = [...names].filter((name) => name.id !== id);
+
+  //           console.log(id, "Dfs");
+  //           setNames(existingNames);
+  //         }
+  //       },
+  //       (txObj, error) => {
+  //         console.log(error);
+  //         console.log(id);
+  //       }
+  //     );
+  //   });
+  // };
   return (
     <Screen style={styles.container}>
-      <View style={styles.searchBar}>
-        <MaterialCommunityIcons name="magnify" size={24} color="white" />
-        <AppText>Exercise database</AppText>
-        <View>
-          <AppText>..</AppText>
+      <TouchableOpacity onPress={() => navigation.navigate("Exercises")}>
+        <View style={styles.searchBar}>
+          <MaterialCommunityIcons name="magnify" size={24} color="white" />
+          <AppText>Exercise database</AppText>
+          <View>
+            <AppText>..</AppText>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
       <SortableList COL={1} height={70}>
         {tiles.map((tile) => (
           // <Tile
@@ -30,6 +92,29 @@ function HomeScreen(props: HomeScreenProps): JSX.Element {
           <ListItem2 id={tile.id} title={tile.uri} key={tile.id} />
         ))}
       </SortableList>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Analytics")}
+        style={{
+          position: "absolute",
+          bottom: 20,
+          right: 20,
+          backgroundColor: "grey",
+          width: 80,
+          height: 80,
+          borderRadius: 30,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text>Add</Text>
+      </TouchableOpacity>
+      <TextInput
+        placeholder="Name"
+        value={currentRoutineName}
+        onChangeText={setCurrentroutineName}
+      />
+      <Button title="Submit" onPress={addRoutine} />
+      {/* <View>{showNames()}</View> */}
     </Screen>
   );
 }
@@ -55,88 +140,28 @@ export default HomeScreen;
 
 const tiles = [
   {
-    id: "google",
-    uri: "https://google.com",
+    id: "push",
+    uri: "Push",
   },
 
   {
-    id: "expo",
-    uri: "https://expo.io",
+    id: "Pull",
+    uri: "Pull",
   },
   {
-    id: "instagram",
-    uri: "https://instagram.com/",
+    id: "Legs",
+    uri: "Legs",
   },
   {
     id: "reanimated",
-    uri: "https://docs.swmansion.com/react-native-reanimated/",
+    uri: "Arms",
   },
   {
     id: "github",
-    uri: "https://github.com",
+    uri: "Chest",
   },
   {
     id: "rnnavigation",
-    uri: "https://reactnavigation.org/",
-  },
-  {
-    id: "youtube",
-    uri: "https://youtube.com",
-  },
-  {
-    id: "twitter",
-    uri: "https://twitter.com",
-  },
-  {
-    id: "linkedin",
-    uri: "https://www.linkedin.com",
-  },
-  {
-    id: "wikipedia",
-    uri: "https://www.wikipedia.org",
-  },
-  {
-    id: "amazon",
-    uri: "https://www.amazon.com",
-  },
-  {
-    id: "ebay",
-    uri: "https://www.ebay.com",
-  },
-  {
-    id: "netflix",
-    uri: "https://www.netflix.com",
-  },
-  {
-    id: "apple",
-    uri: "https://www.apple.com",
-  },
-  {
-    id: "microsoft",
-    uri: "https://www.microsoft.com",
-  },
-  {
-    id: "yahoo",
-    uri: "https://www.yahoo.com",
-  },
-  {
-    id: "bing",
-    uri: "https://www.bing.com",
-  },
-  {
-    id: "stackoverflow",
-    uri: "https://stackoverflow.com",
-  },
-  {
-    id: "wordpress",
-    uri: "https://wordpress.com",
-  },
-  {
-    id: "imdb",
-    uri: "https://www.imdb.com",
-  },
-  {
-    id: "craigslist",
-    uri: "https://www.craigslist.org",
+    uri: "back",
   },
 ];
