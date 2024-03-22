@@ -1,8 +1,10 @@
+import "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import AppNavigator from "./app/navigation/AppNavigator";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import * as SQLite from "expo-sqlite/next";
 import {
@@ -14,44 +16,58 @@ import {
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
 import { Suspense, useEffect, useState } from "react";
+import WorkoutNavigator from "./app/navigation/WorkoutNavigator";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
 
-  const loadDatabase = async () => {
-    const dbName = "Ascent.db";
-    const dbAsset = require("./app/assets/db/Ascent.db");
-    const dbUri = Asset.fromModule(dbAsset).uri;
-
-    const dbFilePath = `${FileSystem.documentDirectory}SQLite/${dbName}`;
-
-    const fileInfo = await FileSystem.getInfoAsync(dbFilePath);
-    // if (fileInfo.exists) {
-    //   // Database file exists, delete it
-    //   await FileSystem.deleteAsync(dbFilePath);
-    // }
-
-    // Create directory if it doesn't exist
-    if (!fileInfo.exists) {
+  async function openDatabase() {
+    if (
+      !(await FileSystem.getInfoAsync(FileSystem.documentDirectory + "SQLite"))
+        .exists
+    ) {
       await FileSystem.makeDirectoryAsync(
-        `${FileSystem.documentDirectory}SQLite`,
-        { intermediates: true }
+        FileSystem.documentDirectory + "SQLite"
       );
-
-      // Download the new database file
-      await FileSystem.downloadAsync(dbUri, dbFilePath);
     }
-  };
+    await FileSystem.downloadAsync(
+      Asset.fromModule(require("./app/assets/db/Ascent.db")).uri,
+      FileSystem.documentDirectory + "SQLite/Ascent.db"
+    );
+  }
+  // useEffect(() => {
+  //   openDatabase();
+  // }, []);
 
-  useEffect(() => {
-    loadDatabase()
-      .then(() => {
-        console.log("Database Loaded Successfully!");
-        setIsLoading(false);
-      })
-      .catch((e) => console.log(e));
-    // Delete();
-  }, []);
+  // useEffect(() => {
+  //   loadDatabase()
+  //     .then(() => {
+  //       console.log("Database Loaded Successfully!");
+  //       setIsLoading(false);
+  //     })
+  //     .catch((e) => console.log(e));
+  //   // Delete();
+  // }, []);
+  // useEffect(() => {
+  //   checkFirstTimeOpen();
+  // }, []);
+
+  // const checkFirstTimeOpen = async () => {
+  //   try {
+  //     const isFirstTimeOpen = await AsyncStorage.getItem("isFirstTimeOpen");
+  //     console.log(isFirstTimeOpen);
+  //     if (isFirstTimeOpen === null) {
+  //       // This is the first time the app is being opened
+  //       // Call your function here
+  //       loadDatabase();
+
+  //       // Set the flag to indicate that the app has been opened before
+  //       await AsyncStorage.setItem("isFirstTimeOpen", "false");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error checking first time open:", error);
+  //   }
+  // };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -59,7 +75,8 @@ export default function App() {
         <Suspense fallback={<Loading />}>
           <SQLiteProvider databaseName="Ascent.db" useSuspense>
             <StatusBar style="dark" />
-            <AppNavigator />
+            {/* <AppNavigator /> */}
+            <WorkoutNavigator />
           </SQLiteProvider>
         </Suspense>
       </NavigationContainer>
@@ -90,4 +107,29 @@ const Loading = () => {
       <Text>Loading...</Text>
     </View>
   );
+};
+
+const loadDatabase = async () => {
+  // const db=SQLite.openda
+  const dbName = "Ascent.db";
+  const dbAsset = require("./app/assets/db/Ascent.db");
+  const dbUri = Asset.fromModule(dbAsset).uri;
+
+  const dbFilePath = `${FileSystem.documentDirectory}SQLite/${dbName}`;
+
+  const fileInfo = await FileSystem.getInfoAsync(dbFilePath);
+  if (fileInfo.exists) {
+    // Database file exists, delete it
+    await FileSystem.deleteAsync(dbFilePath);
+  }
+
+  // Create directory if it doesn't exist
+  // if (!fileInfo.exists) {
+  await FileSystem.makeDirectoryAsync(`${FileSystem.documentDirectory}SQLite`, {
+    intermediates: true,
+  });
+
+  // Download the new database file
+  await FileSystem.downloadAsync(dbUri, dbFilePath);
+  // }
 };

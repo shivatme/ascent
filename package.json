@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@nozbe/microfuzz": "^1.0.0",
+    "@react-native-async-storage/async-storage": "1.21.0",
     "@react-navigation/bottom-tabs": "^6.5.16",
     "@react-navigation/native": "^6.1.14",
+    "@react-navigation/stack": "^6.3.29",
     "dayjs": "^1.11.10",
     "expo": "~50.0.8",
     "expo-asset": "~9.0.2",

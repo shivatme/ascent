@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeScreen from "../screens/HomeScreen";
+import HomeScreen from "../screens/RoutinesScreen";
 import AnalyticsScreen from "../screens/AnalyticsScreen";
 import ExercisesScreen from "../screens/ExercisesScreen";
 import SettingsScreen from "../screens/SettingsScreen";
@@ -7,6 +7,10 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import BodyDataScreen from "../screens/BodyDataScreen";
 import CalendarScreen from "../screens/CalendarScreen";
 import WorkoutPlanningScreen from "../screens/WorkoutPlanningScreen";
+import MuscleGroupsScreen from "../screens/MuscleGroupsScreen";
+import ExerciseDetailsScreen from "../screens/ExerciseDetailsScreen";
+import RoutineDetailsScreen from "../screens/RoutineDetailsScreen";
+import WorkoutNavigator from "./WorkoutNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -25,7 +29,7 @@ function AppNavigator(): JSX.Element {
     >
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={WorkoutNavigator}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
@@ -36,43 +40,13 @@ function AppNavigator(): JSX.Element {
           ),
         }}
       />
-      <Tab.Screen
-        name="Analytics"
-        component={WorkoutPlanningScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="google-analytics"
-              size={size}
-              color={color}
-            />
-          ),
-        }}
-      />
+
       <Tab.Screen
         name="Exercises"
-        component={ExercisesScreen}
+        component={MuscleGroupsScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="dumbbell" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Body Data"
-        component={BodyDataScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="account" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Calendar"
-        component={CalendarScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="account" size={size} color={color} />
           ),
         }}
       />

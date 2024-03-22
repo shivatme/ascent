@@ -11,13 +11,13 @@ interface ListItemProps {
 function ListItem({ title, id }: ListItemProps): JSX.Element {
   //   console.log(highLight);
   return (
-    <TouchableOpacity onPress={() => console.log(id)}>
-      <View style={styles.container}>
-        <AppText numberOfLines={1} style={styles.title}>
-          {title}
-        </AppText>
-      </View>
-    </TouchableOpacity>
+    // <TouchableOpacity onPress={() => console.log(id)}>
+    <View style={styles.container}>
+      <AppText numberOfLines={1} style={styles.title}>
+        {title}
+      </AppText>
+    </View>
+    // </TouchableOpacity>
   );
 }
 
@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   title: {
+    textTransform: "capitalize",
     // backgroundColor: "red",
     // backgroundColor: "rgba(16, 18, 255, 0.5)",
   },

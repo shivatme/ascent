@@ -27,7 +27,7 @@ function WorkoutPlanningScreen({
         }}
       >
         <Button title="Close" onPress={() => setModalVisible(!modalVisible)} />
-        <ExercisesScreen />
+        {/* <ExercisesScreen /> */}
       </Modal>
     </View>
   );

@@ -5,6 +5,7 @@ interface SettingsScreenProps {}
 
 function SettingsScreen(props: SettingsScreenProps): JSX.Element {
   const [isEnabled, setIsEnabled] = useState(false);
+
   return (
     <View style={styles.container}>
       <Text>Settings</Text>

@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Text, FlatList, TextInput } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  FlatList,
+  TextInput,
+  Pressable,
+} from "react-native";
 import { useFuzzySearchList, Highlight } from "@nozbe/microfuzz/react";
 import createFuzzySearch from "@nozbe/microfuzz";
 import Screen from "../components/Screen";
 import ListItem from "../components/ListItem";
 import { useSQLiteContext } from "expo-sqlite/next";
 
-interface ExercisesScreenProps {}
+interface ExercisesScreenProps {
+  navigation: any;
+  route: any;
+}
 interface Exercise {
   name: string;
   force: string;
@@ -20,13 +30,24 @@ interface Exercise {
   images: string[];
   id: string;
 }
-// const exerciseData: Exercise[] = require("../assets/json/exercises.json");
 
-function ExercisesScreen(props: ExercisesScreenProps): JSX.Element {
+function ExercisesScreen({
+  navigation,
+  route,
+}: ExercisesScreenProps): JSX.Element {
+  const db = useSQLiteContext();
+
+  const { item } = route.params;
+  useEffect(() => {
+    if (item) {
+      getMuscleExercise(item);
+    } else {
+      getExercises();
+    }
+  }, [item]);
+
   const [queryText, setSearchQuery] = useState("");
   const [exerciseList, setExerciseList] = useState<Exercise[]>([]);
-  const [muscleGroups, setMuscleGroups] = useState([]);
-  // let list: Exercise[] = exerciseData;
 
   const filteredList = useFuzzySearchList({
     list: exerciseList,
@@ -35,51 +56,53 @@ function ExercisesScreen(props: ExercisesScreenProps): JSX.Element {
     mapResultItem: ({ item, score, matches: [highlightRanges] }) => item,
   });
 
-  const db = useSQLiteContext();
-  console.log(db.databaseName);
-  // console.log("sqlite version", db.getSync("SELECT sqlite_version()"));
   async function getExercises() {
-    console.log("called");
     const result = await db.getAllAsync<Exercise>("SELECT * FROM exercises;");
-    // console.log(result);
 
     setExerciseList(result);
   }
-  const getMuscleGroups = async () => {
-    const result = await db.getAllAsync(
-      "SELECT DISTINCT primaryMuscles FROM exercises;"
+
+  async function getMuscleExercise(item: string) {
+    const result = await db.getAllAsync<Exercise>(
+      "SELECT * FROM exercises WHERE primaryMuscles=?;",
+      [item]
     );
-
-    const muscleGroups = result.map((item) => item.primaryMuscles);
-    setMuscleGroups(muscleGroups);
-  };
-
-  useEffect(() => {
-    getExercises();
-    getMuscleGroups();
-  }, []);
-  useEffect(() => {
-    console.log(muscleGroups);
-  }, [muscleGroups]);
+    setExerciseList(result);
+  }
 
   return (
     <Screen style={styles.container}>
       <View style={{ padding: 5 }}>
+        <TextInput
+          autoFocus
+          style={styles.textInput}
+          placeholder="Search"
+          placeholderTextColor={"white"}
+          onChangeText={setSearchQuery}
+          value={queryText}
+        />
+
         <FlatList
-          data={muscleGroups}
-          // ListHeaderComponent={
-          //   <TextInput
-          //     style={styles.textInput}
-          //     placeholder="Search"
-          //     placeholderTextColor={"white"}
-          //     onChangeText={setSearchQuery}
-          //     value={queryText}
-          //   />
-          // }
-          keyExtractor={(item) => item}
-          renderItem={({ item }) => (
+          data={filteredList}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item, index }) => (
             <>
-              <ListItem title={item} id={item} />
+              <Pressable
+                onPress={() =>
+                  navigation.navigate("ExerciseDetails", {
+                    name: item.name,
+                    force: item.force,
+                    level: item.level,
+                    mechanic: item.mechanic,
+                    equipment: item.equipment,
+                    category: item.category,
+                    instructions: item.instructions,
+                    primaryMuscles: item.primaryMuscles,
+                  })
+                }
+              >
+                <ListItem title={item.name} id={item.id} />
+              </Pressable>
             </>
           )}
         />
@@ -98,6 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     height: 40,
     borderRadius: 150,
+    color: "white",
     margin: 10,
     paddingHorizontal: 20,
     backgroundColor: "#212a31",
