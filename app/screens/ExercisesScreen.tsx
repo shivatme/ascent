@@ -37,7 +37,7 @@ function ExercisesScreen({
 }: ExercisesScreenProps): JSX.Element {
   const db = useSQLiteContext();
 
-  const { item } = route.params;
+  const { item, type, id } = route.params;
   useEffect(() => {
     if (item) {
       getMuscleExercise(item);
@@ -70,6 +70,23 @@ function ExercisesScreen({
     setExerciseList(result);
   }
 
+  function handlePress(item: Exercise) {
+    if (type === "Exercise Details") {
+      navigation.navigate("ExerciseDetails", {
+        name: item.name,
+        force: item.force,
+        level: item.level,
+        mechanic: item.mechanic,
+        equipment: item.equipment,
+        category: item.category,
+        instructions: item.instructions,
+        primaryMuscles: item.primaryMuscles,
+      });
+    } else if (type === "Add Exercise") {
+      console.log("addd");
+      navigation.navigate("RoutineDetails", { id, exercise_id: item.id });
+    }
+  }
   return (
     <Screen style={styles.container}>
       <View style={{ padding: 5 }}>
@@ -87,20 +104,7 @@ function ExercisesScreen({
           keyExtractor={(item) => item.id}
           renderItem={({ item, index }) => (
             <>
-              <Pressable
-                onPress={() =>
-                  navigation.navigate("ExerciseDetails", {
-                    name: item.name,
-                    force: item.force,
-                    level: item.level,
-                    mechanic: item.mechanic,
-                    equipment: item.equipment,
-                    category: item.category,
-                    instructions: item.instructions,
-                    primaryMuscles: item.primaryMuscles,
-                  })
-                }
-              >
+              <Pressable onPress={() => handlePress(item)}>
                 <ListItem title={item.name} id={item.id} />
               </Pressable>
             </>

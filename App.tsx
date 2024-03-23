@@ -1,10 +1,11 @@
 import "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import AppNavigator from "./app/navigation/AppNavigator";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SystemUI from "expo-system-ui";
 
 import * as SQLite from "expo-sqlite/next";
 import {
@@ -19,6 +20,7 @@ import { Suspense, useEffect, useState } from "react";
 import WorkoutNavigator from "./app/navigation/WorkoutNavigator";
 
 export default function App() {
+  SystemUI.setBackgroundColorAsync("#181c1f");
   const [isLoading, setIsLoading] = useState(true);
 
   async function openDatabase() {
@@ -87,7 +89,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#181c1f",
     alignItems: "center",
     justifyContent: "center",
   },

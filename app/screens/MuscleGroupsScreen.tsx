@@ -14,6 +14,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 interface MuscleGroupsScreenProps {
   navigation: any;
+  route: any;
 }
 interface Muscles {
   primaryMuscles: string;
@@ -21,8 +22,30 @@ interface Muscles {
 
 function MuscleGroupsScreen({
   navigation,
+  route,
 }: MuscleGroupsScreenProps): JSX.Element {
   const db = useSQLiteContext();
+
+  const { type, id } = route.params;
+  console.log(id);
+
+  function handlePress(item: string) {
+    if (type === "Exercises") {
+      navigation.navigate("Exercises", {
+        item: item,
+        type: "Exercise Details",
+        id,
+      });
+    } else if (type === "Add Exercise") {
+      console.log("addd");
+      navigation.navigate("Exercises", {
+        item: item,
+        type: "Add Exercise",
+        id,
+      });
+    }
+  }
+  console.log(type);
 
   const [muscleGroups, setMuscleGroups] = useState<string[]>([]);
 
@@ -41,11 +64,16 @@ function MuscleGroupsScreen({
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => navigation.navigate("Exercises", { item: null })}
+        onPress={() =>
+          navigation.navigate("Exercises", {
+            item: null,
+            type: "Exercise Details",
+          })
+        }
       >
         <View style={styles.searchBar}>
           <MaterialCommunityIcons name="magnify" size={24} color="white" />
-          <AppText>Exercise List</AppText>
+          <AppText>{type}</AppText>
           <View>
             <AppText>..</AppText>
           </View>
@@ -57,10 +85,7 @@ function MuscleGroupsScreen({
         keyExtractor={(item) => item}
         renderItem={({ item }) => (
           <>
-            <Pressable
-              key={item}
-              onPress={() => navigation.navigate("Exercises", { item: item })}
-            >
+            <Pressable key={item} onPress={() => handlePress(item)}>
               <ListItem title={item} id={item} />
             </Pressable>
           </>

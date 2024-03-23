@@ -1,6 +1,14 @@
 import { useSQLiteContext } from "expo-sqlite/next";
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Text, Modal, Button, FlatList } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Modal,
+  Button,
+  FlatList,
+  Pressable,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import ListItem from "../components/ListItem";
 
@@ -18,9 +26,10 @@ function RoutineDetailsScreen({
 }: RoutineDetailsScreenProps): JSX.Element {
   const db = useSQLiteContext();
 
-  const { id } = route.params;
+  const { id, exercise_id } = route.params;
+  // console.log(id);
 
-  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [exercises, setExercises] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
@@ -28,30 +37,39 @@ function RoutineDetailsScreen({
   }, []);
 
   async function getRoutineExercises(item: string) {
+    // console.log(id);
     const result = await db.getAllAsync<Exercise>(
       `SELECT name
       FROM routine_exercises
-      JOIN exercises 
+      JOIN exercises
           ON routine_exercises.exercise_id=exercises.id
           WHERE routine_id=?;`,
+      // "SELECT * FROM routine_exercises "
       [item]
     );
     console.log(result);
     setExercises(result);
   }
-  async function addRoutine() {
+
+  if (exercise_id) {
+    addExercise(exercise_id);
+  }
+  async function addExercise(exercise_id: string) {
     // if (currentRoutineName) {
     //   try
+    // console.log(id, "adaaaaa");
+
     const result = await db.runAsync(
       `INSERT INTO routine_exercises (routine_id, exercise_id) VALUES (?, ?)`,
-      [id, "Air_Bike"]
+      [id, exercise_id]
     );
+    // console.log(result);
     setModalVisible(false);
   }
   return (
     <View style={styles.container}>
       <Text>{id}</Text>
-      {exercises && (
+      {exercises.length !== 0 ? (
         <>
           <View>
             <FlatList
@@ -61,6 +79,15 @@ function RoutineDetailsScreen({
               )}
             />
           </View>
+        </>
+      ) : (
+        <>
+          <Pressable
+            onPress={() => console.log("Pressed")}
+            style={styles.addExercises}
+          >
+            <Text>Add Exercises</Text>
+          </Pressable>
         </>
       )}
       <View
@@ -76,13 +103,20 @@ function RoutineDetailsScreen({
           alignItems: "center",
         }}
       >
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("MuscleGroups", {
+              type: "Add Exercise",
+              id: id,
+            })
+          }
+        >
           <Text>Add</Text>
         </TouchableOpacity>
       </View>
-      <Modal visible={modalVisible}>
+      {/* <Modal visible={modalVisible}>
         <Button title="Submit" onPress={addRoutine} />
-      </Modal>
+      </Modal> */}
     </View>
   );
 }
@@ -91,6 +125,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#181c1f",
+  },
+  addExercises: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    backgroundColor: "grey",
+    height: 50,
   },
 });
 

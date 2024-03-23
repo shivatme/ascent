@@ -99,7 +99,14 @@ function RoutinesScreen({ navigation }: RoutinesScreenProps): JSX.Element {
 
   return (
     <Screen style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate("MuscleGroups")}>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("MuscleGroups", {
+            type: "Exercise List",
+            id: null,
+          })
+        }
+      >
         <View style={styles.searchBar}>
           <MaterialCommunityIcons name="magnify" size={24} color="white" />
           <AppText>Exercise database</AppText>

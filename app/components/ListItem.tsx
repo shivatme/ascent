@@ -6,9 +6,10 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 interface ListItemProps {
   title: string;
   id: string;
+  onPress?: Function;
 }
 
-function ListItem({ title, id }: ListItemProps): JSX.Element {
+function ListItem({ title, id, onPress }: ListItemProps): JSX.Element {
   //   console.log(highLight);
   return (
     // <TouchableOpacity onPress={() => console.log(id)}>
