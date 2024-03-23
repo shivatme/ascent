@@ -27,7 +27,6 @@ function RoutineDetailsScreen({
   const db = useSQLiteContext();
 
   const { id, exercise_id } = route.params;
-  // console.log(id);
 
   const [exercises, setExercises] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -37,7 +36,6 @@ function RoutineDetailsScreen({
   }, []);
 
   async function getRoutineExercises(item: string) {
-    // console.log(id);
     const result = await db.getAllAsync<Exercise>(
       `SELECT name
       FROM routine_exercises
@@ -47,7 +45,7 @@ function RoutineDetailsScreen({
       // "SELECT * FROM routine_exercises "
       [item]
     );
-    console.log(result);
+
     setExercises(result);
   }
 
@@ -55,15 +53,10 @@ function RoutineDetailsScreen({
     addExercise(exercise_id);
   }
   async function addExercise(exercise_id: string) {
-    // if (currentRoutineName) {
-    //   try
-    // console.log(id, "adaaaaa");
-
     const result = await db.runAsync(
       `INSERT INTO routine_exercises (routine_id, exercise_id) VALUES (?, ?)`,
       [id, exercise_id]
     );
-    // console.log(result);
     setModalVisible(false);
   }
   return (
@@ -83,7 +76,12 @@ function RoutineDetailsScreen({
       ) : (
         <>
           <Pressable
-            onPress={() => console.log("Pressed")}
+            onPress={() =>
+              navigation.navigate("MuscleGroups", {
+                type: "Add Exercise",
+                id: id,
+              })
+            }
             style={styles.addExercises}
           >
             <Text>Add Exercises</Text>

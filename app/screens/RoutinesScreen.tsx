@@ -38,8 +38,6 @@ function RoutinesScreen({ navigation }: RoutinesScreenProps): JSX.Element {
   const db = useSQLiteContext();
 
   const addRoutine = async (routine: string, day: string) => {
-    // console.log(routine, day);
-    // if (currentRoutineName) {
     const result = await db.runAsync(
       `INSERT INTO routines (id, name, day) VALUES (?, ?, ?)`,
       [routine, routine, day]
@@ -74,12 +72,10 @@ function RoutinesScreen({ navigation }: RoutinesScreenProps): JSX.Element {
   };
   const getRoutines = async () => {
     const result = await db.getAllAsync<Routine>("SELECT * FROM routines;");
-    console.log(result);
+
     setRoutines(result);
   };
   const handleDelete = (item) => {
-    // Delete the message from messages
-    // console.log(item);
     Alert.alert(
       "Alert Title",
       `Are you sure you want to delete ${item.name} routine`,
@@ -217,39 +213,3 @@ const styles = StyleSheet.create({
 });
 
 export default RoutinesScreen;
-
-{
-  /* <SortableList COL={1} height={70}>
-        {tiles.map((tile) => (
-          // <Tile
-          //   onLongPress={() => true}
-          //   key={tile.id}
-          //   id={tile.id}
-          //   uri={tile.uri}
-          // />
-          <ListItem2 id={tile.id} title={tile.uri} key={tile.id} />
-        ))}
-      </SortableList> */
-}
-
-// const deleteRoutine = (id: number) => {
-//   console.log(id, "aaa");
-//   db.transaction((tx) => {
-//     tx.executeSql(
-//       "DELETE FROM names WHERE id = ? ",
-//       [id],
-//       (txObj, resultSet) => {
-//         if (resultSet.rowsAffected > 0) {
-//           let existingNames = [...names].filter((name) => name.id !== id);
-
-//           console.log(id, "Dfs");
-//           setNames(existingNames);
-//         }
-//       },
-//       (txObj, error) => {
-//         console.log(error);
-//         console.log(id);
-//       }
-//     );
-//   });
-// };

@@ -33,17 +33,15 @@ function ListItem2({
   }, [isSwipeableOpen]);
 
   const handleSwipeableRightOpen = () => {
-    // console.log("open");
     setIsSwipeableOpen(true);
   };
-  // console.log(label);
+
   const swipeableRef = useRef(null);
   return (
     <Swipeable
       ref={swipeableRef}
       renderRightActions={renderRightActions}
       onSwipeableOpen={handleSwipeableRightOpen}
-      // enabled={isSwipeableOpen}
     >
       <View style={styles.container}>
         <View style={styles.circle}>

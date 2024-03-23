@@ -8,7 +8,7 @@ interface MonthProps {
 
 function Month({ month }: MonthProps): JSX.Element {
   const now = dayjs().month();
-  // console.log(now);
+
   return (
     <View style={styles.container}>
       {month.map((row, i) => (

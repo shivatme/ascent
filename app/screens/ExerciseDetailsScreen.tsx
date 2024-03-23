@@ -18,16 +18,6 @@ function ExerciseDetailsScreen({
     instructions,
     primaryMuscles,
   } = route.params;
-  console.log(
-    name,
-    force,
-    level,
-    mechanic,
-    equipment,
-    category,
-    instructions,
-    primaryMuscles
-  );
 
   return (
     <View style={styles.container}>

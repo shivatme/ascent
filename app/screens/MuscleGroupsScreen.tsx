@@ -27,9 +27,8 @@ function MuscleGroupsScreen({
   const db = useSQLiteContext();
 
   const { type, id } = route.params;
-  console.log(id);
 
-  function handlePress(item: string) {
+  function handlePress(item: string | null) {
     if (type === "Exercises") {
       navigation.navigate("Exercises", {
         item: item,
@@ -37,7 +36,6 @@ function MuscleGroupsScreen({
         id,
       });
     } else if (type === "Add Exercise") {
-      console.log("addd");
       navigation.navigate("Exercises", {
         item: item,
         type: "Add Exercise",
@@ -45,7 +43,6 @@ function MuscleGroupsScreen({
       });
     }
   }
-  console.log(type);
 
   const [muscleGroups, setMuscleGroups] = useState<string[]>([]);
 
@@ -64,12 +61,13 @@ function MuscleGroupsScreen({
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() =>
-          navigation.navigate("Exercises", {
-            item: null,
-            type: "Exercise Details",
-          })
-        }
+        // onPress={() =>
+        //   navigation.navigate("Exercises", {
+        //     item: null,
+        //     type: "Exercise Details",
+        //   })
+        // }
+        onPress={() => handlePress(null)}
       >
         <View style={styles.searchBar}>
           <MaterialCommunityIcons name="magnify" size={24} color="white" />

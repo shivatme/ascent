@@ -10,15 +10,12 @@ interface ListItemProps {
 }
 
 function ListItem({ title, id, onPress }: ListItemProps): JSX.Element {
-  //   console.log(highLight);
   return (
-    // <TouchableOpacity onPress={() => console.log(id)}>
     <View style={styles.container}>
       <AppText numberOfLines={1} style={styles.title}>
         {title}
       </AppText>
     </View>
-    // </TouchableOpacity>
   );
 }
 
@@ -27,7 +24,6 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 1,
     borderColor: "grey",
-    // paddingHorizontal: 2,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
@@ -36,8 +32,6 @@ const styles = StyleSheet.create({
   },
   title: {
     textTransform: "capitalize",
-    // backgroundColor: "red",
-    // backgroundColor: "rgba(16, 18, 255, 0.5)",
   },
 });
 

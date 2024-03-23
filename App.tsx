@@ -73,7 +73,7 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <NavigationContainer>
+      <NavigationContainer theme={DarkTheme}>
         <Suspense fallback={<Loading />}>
           <SQLiteProvider databaseName="Ascent.db" useSuspense>
             <StatusBar style="dark" />
