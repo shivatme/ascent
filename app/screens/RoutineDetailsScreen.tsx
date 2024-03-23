@@ -2,7 +2,6 @@ import { useSQLiteContext } from "expo-sqlite/next";
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, Modal, Button, FlatList } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import MuscleGroupsScreen from "./MuscleGroupsScreen";
 import ListItem from "../components/ListItem";
 
 interface RoutineDetailsScreenProps {

@@ -45,7 +45,7 @@ function MuscleGroupsScreen({
       >
         <View style={styles.searchBar}>
           <MaterialCommunityIcons name="magnify" size={24} color="white" />
-          <AppText>Exercise database</AppText>
+          <AppText>Exercise List</AppText>
           <View>
             <AppText>..</AppText>
           </View>

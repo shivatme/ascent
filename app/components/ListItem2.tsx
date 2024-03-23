@@ -1,20 +1,57 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import AppText from "./AppText";
+import Swipeable from "react-native-gesture-handler/Swipeable";
 
 interface ListItem2Props {
   id: string;
   title: string;
+  label: string;
+  renderRightActions: any;
 }
 
-function ListItem2({ id, title }: ListItem2Props): JSX.Element {
+function ListItem2({
+  id,
+  title,
+  label,
+  renderRightActions,
+}: ListItem2Props): JSX.Element {
+  const [isSwipeableOpen, setIsSwipeableOpen] = useState(true);
+
+  useEffect(() => {
+    let timer;
+    if (isSwipeableOpen) {
+      timer = setTimeout(() => {
+        setIsSwipeableOpen(false);
+        swipeableRef.current.close();
+      }, 3000); // 5000 milliseconds = 5 seconds
+    }
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isSwipeableOpen]);
+
+  const handleSwipeableRightOpen = () => {
+    // console.log("open");
+    setIsSwipeableOpen(true);
+  };
+  // console.log(label);
+  const swipeableRef = useRef(null);
   return (
-    <View style={styles.container}>
-      <View style={styles.circle}>
-        <AppText>Sat</AppText>
+    <Swipeable
+      ref={swipeableRef}
+      renderRightActions={renderRightActions}
+      onSwipeableOpen={handleSwipeableRightOpen}
+      // enabled={isSwipeableOpen}
+    >
+      <View style={styles.container}>
+        <View style={styles.circle}>
+          <AppText>{label}</AppText>
+        </View>
+        <AppText>{title}</AppText>
       </View>
-      <AppText>{title}</AppText>
-    </View>
+    </Swipeable>
   );
 }
 
