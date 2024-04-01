@@ -1,42 +1,21 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  FlatList,
-  TextInput,
-  Pressable,
-} from "react-native";
-import { useFuzzySearchList, Highlight } from "@nozbe/microfuzz/react";
-import createFuzzySearch from "@nozbe/microfuzz";
+import { View, StyleSheet, FlatList, TextInput, Pressable } from "react-native";
+import { useFuzzySearchList } from "@nozbe/microfuzz/react";
 import Screen from "../components/Screen";
 import ListItem from "../components/ListItem";
-import { useSQLiteContext } from "expo-sqlite/next";
+import { Exercise } from "../types";
+
+import DBExercises from "../database/exercises";
 
 interface ExercisesScreenProps {
   navigation: any;
   route: any;
-}
-interface Exercise {
-  name: string;
-  force: string;
-  level: string;
-  mechanic: string;
-  equipment: string;
-  primaryMuscles: string[];
-  secondaryMuscles: string[];
-  instructions: string[];
-  category: string;
-  images: string[];
-  id: string;
 }
 
 function ExercisesScreen({
   navigation,
   route,
 }: ExercisesScreenProps): JSX.Element {
-  const db = useSQLiteContext();
-
   const { item, type, id } = route.params;
   useEffect(() => {
     if (item) {
@@ -57,33 +36,20 @@ function ExercisesScreen({
   });
 
   async function getExercises() {
-    const result = await db.getAllAsync<Exercise>("SELECT * FROM exercises;");
-
+    const result = await DBExercises.getAllExercises();
     setExerciseList(result);
   }
 
-  async function getMuscleExercise(item: string) {
-    const result = await db.getAllAsync<Exercise>(
-      "SELECT * FROM exercises WHERE primaryMuscles=?;",
-      [item]
-    );
+  async function getMuscleExercise(primaryMuscle: string) {
+    const result = await DBExercises.getMuscleExercise(primaryMuscle);
     setExerciseList(result);
   }
 
-  function handlePress(item: Exercise) {
+  function handlePress(exercise: Exercise) {
     if (type === "Exercise Details") {
-      navigation.navigate("ExerciseDetails", {
-        name: item.name,
-        force: item.force,
-        level: item.level,
-        mechanic: item.mechanic,
-        equipment: item.equipment,
-        category: item.category,
-        instructions: item.instructions,
-        primaryMuscles: item.primaryMuscles,
-      });
+      navigation.navigate("ExerciseDetails", { exercise });
     } else if (type === "Add Exercise") {
-      navigation.navigate("EditRoutine", { id, exercise_id: item.id });
+      navigation.navigate("EditRoutine", { id, exercise_id: exercise.id });
     }
   }
   return (

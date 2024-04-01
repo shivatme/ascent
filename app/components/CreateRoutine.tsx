@@ -13,7 +13,6 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FlatList } from "react-native-gesture-handler";
-import { useSQLiteContext } from "expo-sqlite/next";
 
 interface CreateRoutineProps {
   onClose: Function;

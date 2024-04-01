@@ -8,27 +8,20 @@ interface ExerciseDetailsScreenProps {
 function ExerciseDetailsScreen({
   route,
 }: ExerciseDetailsScreenProps): JSX.Element {
-  const {
-    name,
-    force,
-    level,
-    mechanic,
-    equipment,
-    category,
-    instructions,
-    primaryMuscles,
-  } = route.params;
+  const { exercise } = route.params;
+
+  console.log(exercise);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{name}</Text>
-      <Text style={styles.text}>{force}</Text>
-      <Text style={styles.text}>{level}</Text>
-      <Text style={styles.text}>{mechanic}</Text>
-      <Text style={styles.text}>{equipment}</Text>
-      <Text style={styles.text}>{category}</Text>
-      <Text style={styles.text}>{instructions}</Text>
-      <Text style={styles.text}>{primaryMuscles}</Text>
+      <Text style={styles.text}>{exercise.name}</Text>
+      <Text style={styles.text}>{exercise.force}</Text>
+      <Text style={styles.text}>{exercise.level}</Text>
+      <Text style={styles.text}>{exercise.mechanic}</Text>
+      <Text style={styles.text}>{exercise.equipment}</Text>
+      <Text style={styles.text}>{exercise.category}</Text>
+      <Text style={styles.text}>{exercise.instructions}</Text>
+      <Text style={styles.text}>{exercise.primaryMuscles}</Text>
       {/* <Text style={styles.text}>{}</Text> */}
     </View>
   );

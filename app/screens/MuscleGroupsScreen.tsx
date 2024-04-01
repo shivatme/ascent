@@ -1,31 +1,21 @@
-import { useSQLiteContext } from "expo-sqlite/next";
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Pressable,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { View, StyleSheet, Pressable, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import ListItem from "../components/ListItem";
 import AppText from "../components/AppText";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Muscles } from "../types";
+import DBExercises from "../database/exercises";
 
 interface MuscleGroupsScreenProps {
   navigation: any;
   route: any;
-}
-interface Muscles {
-  primaryMuscles: string;
 }
 
 function MuscleGroupsScreen({
   navigation,
   route,
 }: MuscleGroupsScreenProps): JSX.Element {
-  const db = useSQLiteContext();
-
   const { type, id } = route.params;
 
   function handlePress(item: string | null) {
@@ -47,9 +37,7 @@ function MuscleGroupsScreen({
   const [muscleGroups, setMuscleGroups] = useState<string[]>([]);
 
   const getMuscleGroups = async () => {
-    const result = await db.getAllAsync<Muscles>(
-      "SELECT DISTINCT primaryMuscles FROM exercises;"
-    );
+    const result = await DBExercises.getMuscleGroups();
     const muscleGroups = result.map((item) => item.primaryMuscles);
     setMuscleGroups(muscleGroups);
   };
@@ -60,15 +48,7 @@ function MuscleGroupsScreen({
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        // onPress={() =>
-        //   navigation.navigate("Exercises", {
-        //     item: null,
-        //     type: "Exercise Details",
-        //   })
-        // }
-        onPress={() => handlePress(null)}
-      >
+      <TouchableOpacity onPress={() => handlePress(null)}>
         <View style={styles.searchBar}>
           <MaterialCommunityIcons name="magnify" size={24} color="white" />
           <AppText>{type}</AppText>

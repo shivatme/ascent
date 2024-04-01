@@ -2,9 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
-  Text,
-  TextInput,
-  Button,
   Modal,
   Pressable,
   TouchableOpacity,
@@ -12,36 +9,28 @@ import {
   Alert,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useSQLiteContext } from "expo-sqlite/next";
 
 import Screen from "../components/Screen";
 import AppText from "../components/AppText";
 import ListItem2 from "../components/ListItem2";
 import CreateRoutine from "../components/CreateRoutine";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
+import DBRoutines from "../database/routines";
+import { Routine } from "../types";
+import Button1 from "../components/Button1";
 
 const screenHeight = Dimensions.get("window").height;
 
 interface RoutinesScreenProps {
   navigation: any;
 }
-interface Routine {
-  id: string;
-  name: string;
-  day: string;
-}
+
 function RoutinesScreen({ navigation }: RoutinesScreenProps): JSX.Element {
   const [routines, setRoutines] = useState<Routine[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [currentRoutineName, setCurrentroutineName] = useState("");
-
-  const db = useSQLiteContext();
 
   const addRoutine = async (routine: string, day: string) => {
-    const result = await db.runAsync(
-      `INSERT INTO routines (id, name, day) VALUES (?, ?, ?)`,
-      [routine, routine, day]
-    );
+    const result = await DBRoutines.addRoutine(routine, day);
     let existingRoutines = [...routines];
     existingRoutines.push({
       id: routine,
@@ -54,28 +43,22 @@ function RoutinesScreen({ navigation }: RoutinesScreenProps): JSX.Element {
   };
 
   const deleteRoutine = async (routine: Routine) => {
-    // if (currentRoutineName) {
     try {
-      // Execute the SQL DELETE statement
-      const result = await db.runAsync(`DELETE FROM routines WHERE id = ?`, [
-        routine.id,
-      ]);
+      const result = await DBRoutines.deleteRoutine(routine);
       console.log(`Routine with ID ${routine.id} removed successfully`);
       const updatedRoutines = routines.filter((rout) => rout.id !== routine.id);
-      // Update the state with the filtered array
       setRoutines(updatedRoutines);
-      // return result;
     } catch (error) {
       console.error(`Error removing routine with ID ${routine.id}:`, error);
       throw error;
     }
   };
   const getRoutines = async () => {
-    const result = await db.getAllAsync<Routine>("SELECT * FROM routines;");
-
+    const result: Routine[] = await DBRoutines.getRoutines();
     setRoutines(result);
   };
-  const handleDelete = (item) => {
+
+  const handleDelete = (item: Routine) => {
     Alert.alert(
       "Alert Title",
       `Are you sure you want to delete ${item.name} routine`,
@@ -98,7 +81,7 @@ function RoutinesScreen({ navigation }: RoutinesScreenProps): JSX.Element {
       <TouchableOpacity
         onPress={() =>
           navigation.navigate("MuscleGroups", {
-            type: "Exercise List",
+            type: "Exercises",
             id: null,
           })
         }
@@ -136,42 +119,20 @@ function RoutinesScreen({ navigation }: RoutinesScreenProps): JSX.Element {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        {/* <View style={styles.modalContainer}>
-          <Pressable
-            style={styles.modalContainer1}
-            onPress={() => setModalVisible(false)}
-          />
-          <View style={styles.modalContent}>
-            <TextInput
-              placeholder="Name"
-              value={currentRoutineName}
-              onChangeText={setCurrentroutineName}
-            />
-            <Button title="Submit" onPress={addRoutine} />
-            <Button title="Close" onPress={() => setModalVisible(false)} />
-          </View>
-        </View> */}
         <CreateRoutine
-          onSubmit={(routine, day) => addRoutine(routine, day)}
+          onSubmit={(routine: string, day: string) => addRoutine(routine, day)}
           onClose={() => setModalVisible(false)}
         />
       </Modal>
+
       <View
         style={{
           position: "absolute",
           bottom: 20,
           right: 20,
-          backgroundColor: "grey",
-          width: 80,
-          height: 80,
-          borderRadius: 30,
-          justifyContent: "center",
-          alignItems: "center",
         }}
       >
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <Text>Add</Text>
-        </TouchableOpacity>
+        <Button1 onPress={() => setModalVisible(true)} title="Add" />
       </View>
     </Screen>
   );

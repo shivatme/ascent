@@ -1,19 +1,20 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Button } from "react-native";
 import AppText from "./AppText";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface ListItem3Props {
   name: string;
   id: string;
   onPress?: Function;
   sets_data: string;
+  onDelete: Function;
 }
 
 function ListItem3({
   name,
   id,
   onPress,
+  onDelete,
   sets_data,
 }: ListItem3Props): JSX.Element {
   const sets = JSON.parse(sets_data);
@@ -24,14 +25,7 @@ function ListItem3({
         {name}
       </AppText>
 
-      {sets &&
-        Object.entries(sets).map(([setName, setCount]) => (
-          <View key={setName} style={styles.box}>
-            <Text>
-              {setName}: {setCount}
-            </Text>
-          </View>
-        ))}
+      <Button title="Delete" onPress={() => onDelete(id)} />
     </View>
   );
 }

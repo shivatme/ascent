@@ -1,64 +1,31 @@
-import { useSQLiteContext } from "expo-sqlite/next";
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  Modal,
-  Button,
-  FlatList,
-  Pressable,
-} from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { View, StyleSheet, Text, FlatList, Pressable } from "react-native";
 import ListItem from "../components/ListItem";
+import DBRoutines from "../database/routines";
+import { Exercise } from "../types";
+import Button1 from "../components/Button1";
 
 interface RoutineDetailsScreenProps {
   route: any;
   navigation: any;
-}
-interface Exercise {
-  name: string;
 }
 
 function RoutineDetailsScreen({
   route,
   navigation,
 }: RoutineDetailsScreenProps): JSX.Element {
-  const db = useSQLiteContext();
-
-  const { id, exercise_id } = route.params;
-
-  const [exercises, setExercises] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
+  const { id } = route.params;
+  const [exercises, setExercises] = useState<Exercise[]>([]);
 
   useEffect(() => {
     getRoutineExercises(id);
   }, []);
 
-  async function getRoutineExercises(item: string) {
-    const result = await db.getAllAsync<Exercise>(
-      `SELECT name
-      FROM routine_exercises
-      JOIN exercises
-          ON routine_exercises.exercise_id=exercises.id
-          WHERE routine_id=?;`,
-      // "SELECT * FROM routine_exercises "
-      [item]
-    );
-
+  async function getRoutineExercises(routine_id: string) {
+    const result = await DBRoutines.getRoutineExercises(routine_id);
     setExercises(result);
   }
 
-  // if (exercise_id) {
-  //   addExercise(exercise_id);
-  // }
-  // async function addExercise(exercise_id: string) {
-  //   const result = await db.runAsync(
-  //     `INSERT INTO routine_exercises (routine_id, exercise_id) VALUES (?, ?)`,
-  //     [id, exercise_id]
-  //   );
-  //   setModalVisible(false);
-  // }
   return (
     <View style={styles.container}>
       <Text>{id}</Text>
@@ -88,57 +55,40 @@ function RoutineDetailsScreen({
           </Pressable>
         </>
       )}
+
       <View
         style={{
           position: "absolute",
           bottom: 20,
           right: 20,
-          backgroundColor: "grey",
-          width: 80,
-          height: 80,
-          borderRadius: 30,
-          justifyContent: "center",
-          alignItems: "center",
         }}
       >
-        <TouchableOpacity
+        <Button1
           onPress={() =>
             navigation.navigate("MuscleGroups", {
               type: "Add Exercise",
               id: id,
             })
           }
-        >
-          <Text>Start</Text>
-        </TouchableOpacity>
+          title="Start"
+        />
       </View>
       <View
         style={{
           position: "absolute",
           bottom: 20,
           left: 20,
-          backgroundColor: "grey",
-          width: 80,
-          height: 80,
-          borderRadius: 30,
-          justifyContent: "center",
-          alignItems: "center",
         }}
       >
-        <TouchableOpacity
+        <Button1
           onPress={() =>
             navigation.navigate("EditRoutine", {
-              // type: "Add Exercise",
               id: id,
             })
           }
-        >
-          <Text>Edit</Text>
-        </TouchableOpacity>
+          title="Edit"
+        />
       </View>
-      {/* <Modal visible={modalVisible}>
-        <Button title="Submit" onPress={addRoutine} />
-      </Modal> */}
     </View>
   );
 }
