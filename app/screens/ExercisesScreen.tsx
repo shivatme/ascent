@@ -83,7 +83,7 @@ function ExercisesScreen({
         primaryMuscles: item.primaryMuscles,
       });
     } else if (type === "Add Exercise") {
-      navigation.navigate("RoutineDetails", { id, exercise_id: item.id });
+      navigation.navigate("EditRoutine", { id, exercise_id: item.id });
     }
   }
   return (

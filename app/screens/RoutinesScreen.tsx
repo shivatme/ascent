@@ -50,7 +50,7 @@ function RoutinesScreen({ navigation }: RoutinesScreenProps): JSX.Element {
     });
     setRoutines(existingRoutines);
     setModalVisible(false);
-    navigation.navigate("RoutineDetails", { id: routine });
+    navigation.navigate("EditRoutine", { id: routine });
   };
 
   const deleteRoutine = async (routine: Routine) => {

@@ -4,6 +4,7 @@ import RoutineDetailsScreen from "../screens/RoutineDetailsScreen";
 import ExercisesScreen from "../screens/ExercisesScreen";
 import MuscleGroupsScreen from "../screens/MuscleGroupsScreen";
 import ExerciseDetailsScreen from "../screens/ExerciseDetailsScreen";
+import EditRoutineScreen from "../screens/EditRoutineScreen";
 
 const Stack = createStackNavigator();
 
@@ -16,6 +17,7 @@ function WorkoutNavigator() {
     >
       <Stack.Screen name="Routines" component={RoutinesScreen} />
       <Stack.Screen name="RoutineDetails" component={RoutineDetailsScreen} />
+      <Stack.Screen name="EditRoutine" component={EditRoutineScreen} />
       <Stack.Screen name="MuscleGroups" component={MuscleGroupsScreen} />
       <Stack.Screen name="Exercises" component={ExercisesScreen} />
       <Stack.Screen name="ExerciseDetails" component={ExerciseDetailsScreen} />

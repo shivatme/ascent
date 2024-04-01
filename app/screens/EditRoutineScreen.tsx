@@ -11,24 +11,26 @@ import {
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import ListItem from "../components/ListItem";
+import ListItem3 from "../components/ListItem3";
 
-interface RoutineDetailsScreenProps {
+interface EditRoutineScreenProps {
   route: any;
   navigation: any;
 }
 interface Exercise {
   name: string;
+  sets_data: string;
 }
 
-function RoutineDetailsScreen({
+function EditRoutineScreen({
   route,
   navigation,
-}: RoutineDetailsScreenProps): JSX.Element {
+}: EditRoutineScreenProps): JSX.Element {
   const db = useSQLiteContext();
 
   const { id, exercise_id } = route.params;
 
-  const [exercises, setExercises] = useState([]);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
@@ -37,7 +39,7 @@ function RoutineDetailsScreen({
 
   async function getRoutineExercises(item: string) {
     const result = await db.getAllAsync<Exercise>(
-      `SELECT name
+      `SELECT name, sets_data
       FROM routine_exercises
       JOIN exercises
           ON routine_exercises.exercise_id=exercises.id
@@ -45,20 +47,25 @@ function RoutineDetailsScreen({
       // "SELECT * FROM routine_exercises "
       [item]
     );
-
+    // console.log(result[7].s);
     setExercises(result);
   }
 
-  // if (exercise_id) {
-  //   addExercise(exercise_id);
-  // }
-  // async function addExercise(exercise_id: string) {
-  //   const result = await db.runAsync(
-  //     `INSERT INTO routine_exercises (routine_id, exercise_id) VALUES (?, ?)`,
-  //     [id, exercise_id]
-  //   );
-  //   setModalVisible(false);
-  // }
+  if (exercise_id) {
+    addExercise(exercise_id);
+  }
+  async function addExercise(exercise_id: string) {
+    const result = await db.runAsync(
+      `INSERT INTO routine_exercises (routine_id, exercise_id, sets_data) VALUES (?, ?, ?)`,
+      [id, exercise_id, '{"set1": 8, "set2": 8, "set3": 8}']
+    );
+    setModalVisible(false);
+  }
+  const a = JSON.parse(
+    '[{"reps": 8, "weight": 50}, {"reps": 8, "weight": 50}, {"reps": 8, "weight": 50}]'
+  );
+
+  console.log(a[0], "sdsd");
   return (
     <View style={styles.container}>
       <Text>{id}</Text>
@@ -68,7 +75,11 @@ function RoutineDetailsScreen({
             <FlatList
               data={exercises}
               renderItem={({ item }) => (
-                <ListItem title={item.name} id={item.name} />
+                <ListItem3
+                  name={item.name}
+                  id={item.name}
+                  sets_data={item.sets_data}
+                />
               )}
             />
           </View>
@@ -109,7 +120,7 @@ function RoutineDetailsScreen({
             })
           }
         >
-          <Text>Start</Text>
+          <Text>Add</Text>
         </TouchableOpacity>
       </View>
       <View
@@ -127,13 +138,13 @@ function RoutineDetailsScreen({
       >
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate("EditRoutine", {
+            navigation.navigate("RoutineDetails", {
               // type: "Add Exercise",
               id: id,
             })
           }
         >
-          <Text>Edit</Text>
+          <Text>Save</Text>
         </TouchableOpacity>
       </View>
       {/* <Modal visible={modalVisible}>
@@ -157,4 +168,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RoutineDetailsScreen;
+export default EditRoutineScreen;

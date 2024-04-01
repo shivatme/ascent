@@ -76,7 +76,8 @@ export default function App() {
       <NavigationContainer theme={DarkTheme}>
         <Suspense fallback={<Loading />}>
           <SQLiteProvider databaseName="Ascent.db" useSuspense>
-            <StatusBar style="dark" />
+            {/* <StatusBar style="light" /> */}
+
             {/* <AppNavigator /> */}
             <WorkoutNavigator />
           </SQLiteProvider>

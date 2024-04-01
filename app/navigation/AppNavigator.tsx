@@ -6,7 +6,7 @@ import SettingsScreen from "../screens/SettingsScreen";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import BodyDataScreen from "../screens/BodyDataScreen";
 import CalendarScreen from "../screens/CalendarScreen";
-import WorkoutPlanningScreen from "../screens/WorkoutPlanningScreen";
+import EditRoutineScreen from "../screens/EditRoutineScreen";
 import MuscleGroupsScreen from "../screens/MuscleGroupsScreen";
 import ExerciseDetailsScreen from "../screens/ExerciseDetailsScreen";
 import RoutineDetailsScreen from "../screens/RoutineDetailsScreen";
