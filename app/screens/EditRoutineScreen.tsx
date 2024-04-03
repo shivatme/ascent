@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, FlatList, Pressable } from "react-native";
-import ListItem3 from "../components/ListItem3";
+import EditRoutineList from "../components/EditRoutineList";
 import { Exercise } from "../types";
 import DBRoutines from "../database/routines";
 import Button1 from "../components/Button1";
@@ -37,6 +37,7 @@ function EditRoutineScreen({
   const onDelete = (item_id: string) => {
     console.log(item_id);
   };
+
   return (
     <View style={styles.container}>
       <Text>{id}</Text>
@@ -46,7 +47,7 @@ function EditRoutineScreen({
             <FlatList
               data={exercises}
               renderItem={({ item }) => (
-                <ListItem3
+                <EditRoutineList
                   name={item.name}
                   id={item.name}
                   sets_data={item.sets_data}

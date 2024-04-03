@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
+import { useDispatch, useSelector } from "react-redux";
 import Screen from "../components/Screen";
 import AppText from "../components/AppText";
 import ListItem2 from "../components/ListItem2";
@@ -18,6 +18,15 @@ import ListItemDeleteAction from "../components/ListItemDeleteAction";
 import DBRoutines from "../database/routines";
 import { Routine } from "../types";
 import Button1 from "../components/Button1";
+import {
+  addNewRoutine,
+  deleteRoutine as D,
+  getRoutines,
+  routineAdded,
+  selectAllRoutines,
+} from "../redux/routineSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { RootState } from "../redux/store";
 
 const screenHeight = Dimensions.get("window").height;
 
@@ -26,55 +35,45 @@ interface RoutinesScreenProps {
 }
 
 function RoutinesScreen({ navigation }: RoutinesScreenProps): JSX.Element {
-  const [routines, setRoutines] = useState<Routine[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const dispatch = useAppDispatch();
+  const routines: Routine[] = useAppSelector(selectAllRoutines);
+  const routinesStatus = useAppSelector((state) => state.routines.status);
+
   const addRoutine = async (routine: string, day: string) => {
-    const result = await DBRoutines.addRoutine(routine, day);
-    let existingRoutines = [...routines];
-    existingRoutines.push({
-      id: routine,
-      name: routine,
-      day: day,
-    });
-    setRoutines(existingRoutines);
+    dispatch(addNewRoutine({ name: routine, day }));
     setModalVisible(false);
     navigation.navigate("EditRoutine", { id: routine });
   };
 
   const deleteRoutine = async (routine: Routine) => {
     try {
-      const result = await DBRoutines.deleteRoutine(routine);
-      console.log(`Routine with ID ${routine.id} removed successfully`);
-      const updatedRoutines = routines.filter((rout) => rout.id !== routine.id);
-      setRoutines(updatedRoutines);
+      dispatch(D(routine));
     } catch (error) {
       console.error(`Error removing routine with ID ${routine.id}:`, error);
       throw error;
     }
   };
-  const getRoutines = async () => {
-    const result: Routine[] = await DBRoutines.getRoutines();
-    setRoutines(result);
-  };
-
   const handleDelete = (item: Routine) => {
     Alert.alert(
       "Alert Title",
       `Are you sure you want to delete ${item.name} routine`,
       [
+        { text: "No", onPress: () => console.log("OK Pressed") },
         {
           text: "Yes",
           onPress: () => deleteRoutine(item),
         },
-        { text: "No", onPress: () => console.log("OK Pressed") },
       ]
     );
   };
 
   useEffect(() => {
-    getRoutines();
-  }, []);
+    if (routinesStatus === "idle") {
+      dispatch(getRoutines());
+    }
+  }, [routinesStatus, dispatch]);
 
   return (
     <Screen style={styles.container}>

@@ -18,6 +18,8 @@ import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
 import { Suspense, useEffect, useState } from "react";
 import WorkoutNavigator from "./app/navigation/WorkoutNavigator";
+import { Provider } from "react-redux";
+import store from "./app/redux/store";
 
 export default function App() {
   SystemUI.setBackgroundColorAsync("#181c1f");
@@ -72,18 +74,20 @@ export default function App() {
   // };
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <NavigationContainer theme={DarkTheme}>
-        <Suspense fallback={<Loading />}>
-          <SQLiteProvider databaseName="Ascent.db" useSuspense>
-            {/* <StatusBar style="light" /> */}
+    <Provider store={store}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <NavigationContainer theme={DarkTheme}>
+          <Suspense fallback={<Loading />}>
+            <SQLiteProvider databaseName="Ascent.db" useSuspense>
+              {/* <StatusBar style="light" /> */}
 
-            {/* <AppNavigator /> */}
-            <WorkoutNavigator />
-          </SQLiteProvider>
-        </Suspense>
-      </NavigationContainer>
-    </GestureHandlerRootView>
+              {/* <AppNavigator /> */}
+              <WorkoutNavigator />
+            </SQLiteProvider>
+          </Suspense>
+        </NavigationContainer>
+      </GestureHandlerRootView>
+    </Provider>
   );
 }
 

@@ -3,10 +3,10 @@ import { Exercise, Routine } from "../types";
 
 const db = SQLite.openDatabaseSync("Ascent.db");
 
-const addRoutine = async (routine: string, day: string) => {
+const addRoutine = async (id: string, routine: string, day: string) => {
   const result = await db.runAsync(
     `INSERT INTO routines (id, name, day) VALUES (?, ?, ?)`,
-    [routine, routine, day]
+    [id, routine, day]
   );
   return result;
 };
