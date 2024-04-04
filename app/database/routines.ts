@@ -1,5 +1,5 @@
 import * as SQLite from "expo-sqlite/next";
-import { Exercise, Routine } from "../types";
+import { Exercise, Routine, RoutineExercise } from "../types";
 
 const db = SQLite.openDatabaseSync("Ascent.db");
 
@@ -25,8 +25,8 @@ const deleteRoutine = async (routine: Routine) => {
 };
 
 const getRoutineExercises = async (routine_id: string) => {
-  const result = await db.getAllAsync<Exercise>(
-    `SELECT name, sets_data
+  const result = await db.getAllAsync<RoutineExercise>(
+    `SELECT routine_exercises.id, name, sets_data
     FROM routine_exercises
     JOIN exercises
         ON routine_exercises.exercise_id=exercises.id
@@ -37,10 +37,14 @@ const getRoutineExercises = async (routine_id: string) => {
   return result;
 };
 
-const addRoutineExercise = async (routine_id: string, exercise_id: string) => {
+const addRoutineExercise = async (
+  routine_id: string,
+  exercise_id: string,
+  sets_data: string
+) => {
   const result = await db.runAsync(
     `INSERT INTO routine_exercises (routine_id, exercise_id, sets_data) VALUES (?, ?, ?)`,
-    [routine_id, exercise_id, '{"set1": 8, "set2": 8, "set3": 8}']
+    [routine_id, exercise_id, sets_data]
   );
   return result;
 };

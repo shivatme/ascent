@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import routinesReducer from "./routineSlice";
+import routinesExerciseReducer from "./routineExerciseSlice";
 
 const store = configureStore({
   reducer: {
     routines: routinesReducer,
+    routineExercises: routinesExerciseReducer,
   },
 });
 

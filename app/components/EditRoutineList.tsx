@@ -2,6 +2,7 @@ import React from "react";
 import { View, StyleSheet, Text, Button } from "react-native";
 import AppText from "./AppText";
 import Icon from "./Icon";
+import { RoutineExercise } from "../types";
 
 interface ListItem3Props {
   name: string;
@@ -12,27 +13,32 @@ interface ListItem3Props {
   quantity: number;
   onPressMinus: Function;
   onPressPlus: Function;
+  item: RoutineExercise;
 }
 
 function ListItem3({
   name,
   id,
+  item,
   onDelete,
   sets_data,
-  quantity = 1,
   onPressMinus,
   onPressPlus,
 }: ListItem3Props): JSX.Element {
-  const sets = JSON.parse(sets_data);
-  console.log(sets);
+  const setsData = JSON.parse(item.sets_data);
+  console.log(item);
+  const numberOfSets = Object.keys(setsData).length;
+
+  console.log(numberOfSets);
+  // console.log(sets);
   return (
     <View style={styles.container}>
       <AppText numberOfLines={1} style={styles.name}>
-        {name}
+        {item.name}
       </AppText>
       <View style={{ flexDirection: "row" }}>
         <Icon name={"minus"} onPress={onPressMinus} />
-        <AppText style={styles.quantity}>{quantity}</AppText>
+        <AppText style={styles.quantity}>{numberOfSets}</AppText>
         <Icon name={"plus"} onPress={onPressPlus} />
       </View>
       {/* <Button title="Delete" onPress={() => onDelete(id)} /> */}

@@ -9,24 +9,22 @@ import {
   Alert,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useDispatch, useSelector } from "react-redux";
 import Screen from "../components/Screen";
 import AppText from "../components/AppText";
 import ListItem2 from "../components/ListItem2";
-import CreateRoutine from "../components/CreateRoutine";
+import CreateRoutine from "../features/CreateRoutine";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
-import DBRoutines from "../database/routines";
 import { Routine } from "../types";
 import Button1 from "../components/Button1";
 import {
   addNewRoutine,
-  deleteRoutine as D,
+  deleteRoutine,
   getRoutines,
-  routineAdded,
+  routineStatus,
   selectAllRoutines,
 } from "../redux/routineSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { RootState } from "../redux/store";
+import { nanoid } from "@reduxjs/toolkit";
 
 const screenHeight = Dimensions.get("window").height;
 
@@ -39,31 +37,24 @@ function RoutinesScreen({ navigation }: RoutinesScreenProps): JSX.Element {
 
   const dispatch = useAppDispatch();
   const routines: Routine[] = useAppSelector(selectAllRoutines);
-  const routinesStatus = useAppSelector((state) => state.routines.status);
+  const routinesStatus = useAppSelector(routineStatus);
 
-  const addRoutine = async (routine: string, day: string) => {
-    dispatch(addNewRoutine({ name: routine, day }));
+  const handleAddRoutine = async (name: string, day: string) => {
+    const id = nanoid();
+    dispatch(addNewRoutine({ id, name, day }));
     setModalVisible(false);
-    navigation.navigate("EditRoutine", { id: routine });
+    navigation.navigate("RoutineDetails", { id });
   };
 
-  const deleteRoutine = async (routine: Routine) => {
-    try {
-      dispatch(D(routine));
-    } catch (error) {
-      console.error(`Error removing routine with ID ${routine.id}:`, error);
-      throw error;
-    }
-  };
-  const handleDelete = (item: Routine) => {
+  const handleDeleteRoutine = (routine: Routine) => {
     Alert.alert(
       "Alert Title",
-      `Are you sure you want to delete ${item.name} routine`,
+      `Are you sure you want to delete ${routine.name} routine`,
       [
         { text: "No", onPress: () => console.log("OK Pressed") },
         {
           text: "Yes",
-          onPress: () => deleteRoutine(item),
+          onPress: () => dispatch(deleteRoutine(routine)),
         },
       ]
     );
@@ -106,7 +97,9 @@ function RoutinesScreen({ navigation }: RoutinesScreenProps): JSX.Element {
             key={routine.id}
             label={routine.day ? routine.day : "Sun"}
             renderRightActions={() => (
-              <ListItemDeleteAction onPress={() => handleDelete(routine)} />
+              <ListItemDeleteAction
+                onPress={() => handleDeleteRoutine(routine)}
+              />
             )}
           />
         </Pressable>
@@ -119,7 +112,9 @@ function RoutinesScreen({ navigation }: RoutinesScreenProps): JSX.Element {
         onRequestClose={() => setModalVisible(false)}
       >
         <CreateRoutine
-          onSubmit={(routine: string, day: string) => addRoutine(routine, day)}
+          onSubmit={(routine: string, day: string) =>
+            handleAddRoutine(routine, day)
+          }
           onClose={() => setModalVisible(false)}
         />
       </Modal>

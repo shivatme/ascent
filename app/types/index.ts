@@ -4,7 +4,8 @@ export interface Routine {
   day: string;
 }
 
-export interface Exercise {
+export interface RoutineExercise {
+  id: string;
   name: string;
   sets_data: string;
 }

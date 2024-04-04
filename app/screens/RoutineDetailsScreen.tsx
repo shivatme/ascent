@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { View, StyleSheet, Text, FlatList, Pressable } from "react-native";
 import ListItem from "../components/ListItem";
-import DBRoutines from "../database/routines";
-import { Exercise } from "../types";
 import Button1 from "../components/Button1";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import {
+  getRoutineExercise,
+  selectRoutineExercise,
+} from "../redux/routineExerciseSlice";
 
 interface RoutineDetailsScreenProps {
   route: any;
@@ -15,16 +18,17 @@ function RoutineDetailsScreen({
   navigation,
 }: RoutineDetailsScreenProps): JSX.Element {
   const { id } = route.params;
-  const [exercises, setExercises] = useState<Exercise[]>([]);
+
+  const dispatch = useAppDispatch();
+  const routineId = useAppSelector((state) => state.routineExercises.routineId);
+  const exercises = useAppSelector(selectRoutineExercise);
 
   useEffect(() => {
-    getRoutineExercises(id);
-  }, []);
-
-  async function getRoutineExercises(routine_id: string) {
-    const result = await DBRoutines.getRoutineExercises(routine_id);
-    setExercises(result);
-  }
+    if (routineId !== id) {
+      console.log("asasasas");
+      dispatch(getRoutineExercise(id));
+    }
+  }, [routineId, dispatch]);
 
   return (
     <View style={styles.container}>

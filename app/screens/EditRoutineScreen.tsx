@@ -4,6 +4,12 @@ import EditRoutineList from "../components/EditRoutineList";
 import { Exercise } from "../types";
 import DBRoutines from "../database/routines";
 import Button1 from "../components/Button1";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import {
+  addRoutineExercise,
+  getRoutineExercise,
+  selectRoutineExercise,
+} from "../redux/routineExerciseSlice";
 
 interface EditRoutineScreenProps {
   route: any;
@@ -14,30 +20,42 @@ function EditRoutineScreen({
   route,
   navigation,
 }: EditRoutineScreenProps): JSX.Element {
-  const { id, exercise_id } = route.params;
+  const { id, exercise_id, exercise_name } = route.params;
 
-  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const dispatch = useAppDispatch();
+  const exercises = useAppSelector(selectRoutineExercise);
+  // console.log(exercises);
 
+  // const routineId = useAppSelector((state) => state.routineExercises.routineId);
+
+  // useEffect(() => {
+  //   if (routineId !== id) {
+  //     console.log("asasasas");
+  //     dispatch(getRoutineExercise(id));
+  //   }
+  // }, [routineId, dispatch]);
   useEffect(() => {
-    getRoutineExercises(id);
-  }, []);
-
-  async function getRoutineExercises(routine_id: string) {
-    const result = await DBRoutines.getRoutineExercises(routine_id);
-    setExercises(result);
-  }
-
-  if (exercise_id) {
-    addExercise(id, exercise_id);
-  }
-  async function addExercise(routine_id: string, exercise_id: string) {
-    const result = await DBRoutines.addRoutineExercise(routine_id, exercise_id);
-  }
+    if (exercise_id) {
+      // addExercise(id, exercise_id);
+      console.log("call");
+      dispatch(
+        addRoutineExercise({ routine_id: id, exercise_id, exercise_name })
+      );
+    }
+  }, [exercise_id]);
+  // console.log("call");
+  // async function addExercise(routine_id: string, exercise_id: string) {
+  //   const result = await DBRoutines.addRoutineExercise(routine_id, exercise_id);
+  // }
 
   const onDelete = (item_id: string) => {
     console.log(item_id);
   };
-
+  const handleSave = () => {
+    navigation.navigate("RoutineDetails", {
+      id: id,
+    });
+  };
   return (
     <View style={styles.container}>
       <Text>{id}</Text>
@@ -47,12 +65,7 @@ function EditRoutineScreen({
             <FlatList
               data={exercises}
               renderItem={({ item }) => (
-                <EditRoutineList
-                  name={item.name}
-                  id={item.name}
-                  sets_data={item.sets_data}
-                  onDelete={onDelete}
-                />
+                <EditRoutineList item={item} onDelete={onDelete} />
               )}
             />
           </View>
@@ -97,14 +110,7 @@ function EditRoutineScreen({
           left: 20,
         }}
       >
-        <Button1
-          onPress={() =>
-            navigation.navigate("RoutineDetails", {
-              id: id,
-            })
-          }
-          title="Save"
-        />
+        <Button1 onPress={handleSave} title="Save" />
       </View>
     </View>
   );

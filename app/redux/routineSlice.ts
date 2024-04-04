@@ -60,10 +60,13 @@ export const getRoutines = createAsyncThunk(
 
 export const addNewRoutine = createAsyncThunk(
   "posts/addNewRoutine",
-  async (routine: { name: string; day: string }) => {
-    const id = nanoid();
-    const routines = { id, name: routine.name, day: routine.day };
-    const result = await DBRoutines.addRoutine(id, routine.name, routine.day);
+  async (routine: Routine) => {
+    const routines = { id: routine.id, name: routine.name, day: routine.day };
+    const result = await DBRoutines.addRoutine(
+      routine.id,
+      routine.name,
+      routine.day
+    );
 
     return routines;
   }
@@ -79,3 +82,4 @@ export const deleteRoutine = createAsyncThunk(
 );
 
 export const selectAllRoutines = (state: RootState) => state.routines.routines;
+export const routineStatus = (state: RootState) => state.routines.status;

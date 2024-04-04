@@ -49,7 +49,11 @@ function ExercisesScreen({
     if (type === "Exercise Details") {
       navigation.navigate("ExerciseDetails", { exercise });
     } else if (type === "Add Exercise") {
-      navigation.navigate("EditRoutine", { id, exercise_id: exercise.id });
+      navigation.navigate("EditRoutine", {
+        id,
+        exercise_id: exercise.id,
+        exercise_name: exercise.name,
+      });
     }
   }
   return (
