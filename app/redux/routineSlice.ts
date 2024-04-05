@@ -38,6 +38,10 @@ export const routinesSlice = createSlice({
       .addCase(addNewRoutine.fulfilled, (state, action) => {
         state.routines.push(action.payload);
       })
+      .addCase(addNewRoutine.rejected, (state, action) => {
+        // state.routines.push(action.payload);
+        console.log("error");
+      })
       .addCase(deleteRoutine.fulfilled, (state, action) => {
         state.routines = state.routines.filter(
           (routine) => routine.id !== action.payload.id

@@ -5,12 +5,14 @@ import { RootState } from "./store";
 
 export interface RoutineExerciseState {
   routineExercise: RoutineExercise[];
+  routineExerciseEdit: RoutineExercise[];
   routineId: string | null;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null | undefined;
 }
 const initialState: RoutineExerciseState = {
   routineExercise: [],
+  routineExerciseEdit: [],
   routineId: null,
   status: "idle",
   error: null,
@@ -22,7 +24,11 @@ export const routineExerciseSlice = createSlice({
   reducers: {
     addRoutineExercise(state: RoutineExerciseState, action) {
       const id = nanoid();
-      const sets_data = '{"set1": 8, "set2": 8, "set3": 8}';
+      const sets_data = `[
+        {"reps": 8, "weight": 0},
+        {"reps": 8, "weight": 0},
+        {"reps": 8, "weight": 0}
+      ]`;
       const routineExercise = {
         id,
         routine_id: action.payload.routine_id,
@@ -31,7 +37,33 @@ export const routineExerciseSlice = createSlice({
         sets_data,
       };
       // console.log(routineExercise);
-      state.routineExercise.push(routineExercise);
+      state.routineExerciseEdit.push(routineExercise);
+    },
+    addExerciseSet(state: RoutineExerciseState, action) {
+      const id = action.payload;
+      const existingExercise = state.routineExerciseEdit.find(
+        (exercise) => exercise.id === id
+      );
+      if (existingExercise) {
+        let setsArray = JSON.parse(existingExercise.sets_data);
+        let newSetReps = 8;
+        let newSet = { reps: newSetReps, weight: 0 };
+        setsArray = [...setsArray, newSet];
+        existingExercise.sets_data = JSON.stringify(setsArray);
+      }
+    },
+    subtractExerciseSet(state: RoutineExerciseState, action) {
+      const id = action.payload;
+      const existingExercise = state.routineExerciseEdit.find(
+        (exercise) => exercise.id === id
+      );
+      if (existingExercise) {
+        const setsData = JSON.parse(existingExercise.sets_data);
+        let setKeys = Object.keys(setsData);
+        let lastSetName = setKeys[setKeys.length - 1];
+        delete setsData[lastSetName];
+        existingExercise.sets_data = JSON.stringify(setsData);
+      }
     },
   },
   extraReducers(builder) {
@@ -43,6 +75,7 @@ export const routineExerciseSlice = createSlice({
         state.status = "succeeded";
         // console.log(action.payload);
         state.routineExercise = action.payload;
+        state.routineExerciseEdit = action.payload;
       })
       .addCase(
         getRoutineExercise.rejected,
@@ -62,14 +95,14 @@ export const routineExerciseSlice = createSlice({
   },
 });
 
-export const { addRoutineExercise } = routineExerciseSlice.actions;
+export const { addRoutineExercise, addExerciseSet, subtractExerciseSet } =
+  routineExerciseSlice.actions;
 
 export default routineExerciseSlice.reducer;
 
 export const getRoutineExercise = createAsyncThunk(
   "routines/getRoutineExercise",
   async (routine_id: string) => {
-    console.log("called 1");
     const result: RoutineExercise[] = await DBRoutines.getRoutineExercises(
       routine_id
     );
@@ -77,26 +110,23 @@ export const getRoutineExercise = createAsyncThunk(
   }
 );
 
-// export const addRoutineExercise = createAsyncThunk(
-//   "posts/addRoutineExercise",
-//   async (item: { routine_id: string; exercise_id: string }) => {
-//     // console.log(item);
-//     const sets_data = '{"set1": 8, "set2": 8, "set3": 8}';
-//     // const result = await DBRoutines.addRoutineExercise(
-//     //   item.routine_id,
-//     //   item.exercise_id,
-//     //   sets_data
-//     // );
-//     // const routines = { id: routine.id, name: routine.name, day: routine.day };
-//     // const result = await DBRoutines.addRoutine(
-//     //   routine.id,
-//     //   routine.name,
-//     //   routine.day
-//     // );
+export const saveRoutine = createAsyncThunk("posts/saveRoutine", async () => {
+  // console.log(item);
 
-//     return item.routine_id, item.exercise_id, sets_data;
-//   }
-// );
+  // const result = await DBRoutines.addRoutineExercise(
+  //   item.routine_id,
+  //   item.exercise_id,
+  //   sets_data
+  // );
+  // const routines = { id: routine.id, name: routine.name, day: routine.day };
+  // const result = await DBRoutines.addRoutine(
+  //   routine.id,
+  //   routine.name,
+  //   routine.day
+  // );
+
+  return item.routine_id, item.exercise_id, sets_data;
+});
 // async function addExercise(routine_id: string, exercise_id: string) {
 //   const result = await DBRoutines.addRoutineExercise(routine_id, exercise_id);
 // }
@@ -112,4 +142,7 @@ export const getRoutineExercise = createAsyncThunk(
 
 export const selectRoutineExercise = (state: RootState) =>
   state.routineExercises.routineExercise;
+
+export const selectRoutineExerciseEdit = (state: RootState) =>
+  state.routineExercises.routineExerciseEdit;
 // export const routineStatus = (state: RootState) => state.routines.status;

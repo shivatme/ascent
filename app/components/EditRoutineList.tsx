@@ -17,8 +17,6 @@ interface ListItem3Props {
 }
 
 function ListItem3({
-  name,
-  id,
   item,
   onDelete,
   sets_data,
@@ -26,20 +24,20 @@ function ListItem3({
   onPressPlus,
 }: ListItem3Props): JSX.Element {
   const setsData = JSON.parse(item.sets_data);
-  console.log(item);
+  // console.log(item);
   const numberOfSets = Object.keys(setsData).length;
 
-  console.log(numberOfSets);
+  // console.log(numberOfSets);
   // console.log(sets);
   return (
     <View style={styles.container}>
       <AppText numberOfLines={1} style={styles.name}>
         {item.name}
       </AppText>
-      <View style={{ flexDirection: "row" }}>
-        <Icon name={"minus"} onPress={onPressMinus} />
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <Icon name={"minus"} onPress={() => onPressMinus(item.id)} />
         <AppText style={styles.quantity}>{numberOfSets}</AppText>
-        <Icon name={"plus"} onPress={onPressPlus} />
+        <Icon name={"plus"} onPress={() => onPressPlus(item.id)} />
       </View>
       {/* <Button title="Delete" onPress={() => onDelete(id)} /> */}
     </View>

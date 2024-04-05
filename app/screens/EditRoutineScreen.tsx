@@ -6,9 +6,12 @@ import DBRoutines from "../database/routines";
 import Button1 from "../components/Button1";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import {
+  addExerciseSet,
   addRoutineExercise,
   getRoutineExercise,
   selectRoutineExercise,
+  selectRoutineExerciseEdit,
+  subtractExerciseSet,
 } from "../redux/routineExerciseSlice";
 
 interface EditRoutineScreenProps {
@@ -23,30 +26,16 @@ function EditRoutineScreen({
   const { id, exercise_id, exercise_name } = route.params;
 
   const dispatch = useAppDispatch();
-  const exercises = useAppSelector(selectRoutineExercise);
-  // console.log(exercises);
+  const exercises = useAppSelector(selectRoutineExerciseEdit);
+  // console.log(typeof exercises[0].sets_data);
 
-  // const routineId = useAppSelector((state) => state.routineExercises.routineId);
-
-  // useEffect(() => {
-  //   if (routineId !== id) {
-  //     console.log("asasasas");
-  //     dispatch(getRoutineExercise(id));
-  //   }
-  // }, [routineId, dispatch]);
   useEffect(() => {
     if (exercise_id) {
-      // addExercise(id, exercise_id);
-      console.log("call");
       dispatch(
         addRoutineExercise({ routine_id: id, exercise_id, exercise_name })
       );
     }
   }, [exercise_id]);
-  // console.log("call");
-  // async function addExercise(routine_id: string, exercise_id: string) {
-  //   const result = await DBRoutines.addRoutineExercise(routine_id, exercise_id);
-  // }
 
   const onDelete = (item_id: string) => {
     console.log(item_id);
@@ -55,6 +44,12 @@ function EditRoutineScreen({
     navigation.navigate("RoutineDetails", {
       id: id,
     });
+  };
+  const addSet = (id: string) => {
+    dispatch(addExerciseSet(id));
+  };
+  const subtractSet = (id: string) => {
+    dispatch(subtractExerciseSet(id));
   };
   return (
     <View style={styles.container}>
@@ -65,7 +60,12 @@ function EditRoutineScreen({
             <FlatList
               data={exercises}
               renderItem={({ item }) => (
-                <EditRoutineList item={item} onDelete={onDelete} />
+                <EditRoutineList
+                  item={item}
+                  onDelete={onDelete}
+                  onPressPlus={addSet}
+                  onPressMinus={subtractSet}
+                />
               )}
             />
           </View>

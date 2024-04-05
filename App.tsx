@@ -125,18 +125,21 @@ const loadDatabase = async () => {
   const dbFilePath = `${FileSystem.documentDirectory}SQLite/${dbName}`;
 
   const fileInfo = await FileSystem.getInfoAsync(dbFilePath);
-  if (fileInfo.exists) {
-    // Database file exists, delete it
-    await FileSystem.deleteAsync(dbFilePath);
-  }
+  // if (fileInfo.exists) {
+  //   // Database file exists, delete it
+  //   await FileSystem.deleteAsync(dbFilePath);
+  // }
 
   // Create directory if it doesn't exist
-  // if (!fileInfo.exists) {
-  await FileSystem.makeDirectoryAsync(`${FileSystem.documentDirectory}SQLite`, {
-    intermediates: true,
-  });
+  if (!fileInfo.exists) {
+    await FileSystem.makeDirectoryAsync(
+      `${FileSystem.documentDirectory}SQLite`,
+      {
+        intermediates: true,
+      }
+    );
 
-  // Download the new database file
-  await FileSystem.downloadAsync(dbUri, dbFilePath);
-  // }
+    // Download the new database file
+    await FileSystem.downloadAsync(dbUri, dbFilePath);
+  }
 };

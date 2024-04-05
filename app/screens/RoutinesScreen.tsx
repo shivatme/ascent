@@ -14,7 +14,7 @@ import AppText from "../components/AppText";
 import ListItem2 from "../components/ListItem2";
 import CreateRoutine from "../features/CreateRoutine";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
-import { Routine } from "../types";
+import { Muscles, Routine } from "../types";
 import Button1 from "../components/Button1";
 import {
   addNewRoutine,
@@ -25,6 +25,7 @@ import {
 } from "../redux/routineSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { nanoid } from "@reduxjs/toolkit";
+import { useSQLiteContext } from "expo-sqlite/next";
 
 const screenHeight = Dimensions.get("window").height;
 
@@ -42,8 +43,12 @@ function RoutinesScreen({ navigation }: RoutinesScreenProps): JSX.Element {
   const handleAddRoutine = async (name: string, day: string) => {
     const id = nanoid();
     dispatch(addNewRoutine({ id, name, day }));
-    setModalVisible(false);
-    navigation.navigate("RoutineDetails", { id });
+
+    const newRoutine = routines.find((routine) => routine.id === id);
+    if (newRoutine) {
+      setModalVisible(false);
+      navigation.navigate("RoutineDetails", { id });
+    } else console.warn("failed");
   };
 
   const handleDeleteRoutine = (routine: Routine) => {

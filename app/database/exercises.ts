@@ -4,6 +4,7 @@ import { Exercise, Muscles } from "../types";
 const db = SQLite.openDatabaseSync("Ascent.db");
 
 const getMuscleGroups = async () => {
+  console.log("ca");
   const result = await db.getAllAsync<Muscles>(
     "SELECT DISTINCT primaryMuscles FROM exercises;"
   );
