@@ -23,26 +23,36 @@ function EditRoutineScreen({
   route,
   navigation,
 }: EditRoutineScreenProps): JSX.Element {
-  const { id, exercise_id, exercise_name } = route.params;
+  const { routineExercise_id, routine_id, exercise_id, exercise_name } =
+    route.params;
 
   const dispatch = useAppDispatch();
   const exercises = useAppSelector(selectRoutineExerciseEdit);
-  // console.log(typeof exercises[0].sets_data);
 
   useEffect(() => {
-    if (exercise_id) {
-      dispatch(
-        addRoutineExercise({ routine_id: id, exercise_id, exercise_name })
+    if (exercise_id && routineExercise_id) {
+      const exists = exercises.find(
+        (exercise) => exercise.id === routineExercise_id
       );
+      if (!exists) {
+        dispatch(
+          addRoutineExercise({
+            routineExercise_id,
+            routine_id,
+            exercise_id,
+            exercise_name,
+          })
+        );
+      }
     }
-  }, [exercise_id]);
+  }, [exercise_id, routineExercise_id]);
 
   const onDelete = (item_id: string) => {
-    console.log(item_id);
+    console.log(item_id, "sdad");
   };
   const handleSave = () => {
     navigation.navigate("RoutineDetails", {
-      id: id,
+      routine_id,
     });
   };
   const addSet = (id: string) => {
@@ -53,7 +63,7 @@ function EditRoutineScreen({
   };
   return (
     <View style={styles.container}>
-      <Text>{id}</Text>
+      <Text>{routine_id}</Text>
       {exercises.length !== 0 ? (
         <>
           <View>
@@ -76,7 +86,7 @@ function EditRoutineScreen({
             onPress={() =>
               navigation.navigate("MuscleGroups", {
                 type: "Add Exercise",
-                id: id,
+                routine_id,
               })
             }
             style={styles.addExercises}
@@ -97,7 +107,7 @@ function EditRoutineScreen({
           onPress={() =>
             navigation.navigate("MuscleGroups", {
               type: "Add Exercise",
-              id: id,
+              routine_id,
             })
           }
           title="Add"

@@ -6,6 +6,7 @@ import ListItem from "../components/ListItem";
 import { Exercise } from "../types";
 
 import DBExercises from "../database/exercises";
+import { nanoid } from "@reduxjs/toolkit";
 
 interface ExercisesScreenProps {
   navigation: any;
@@ -16,14 +17,14 @@ function ExercisesScreen({
   navigation,
   route,
 }: ExercisesScreenProps): JSX.Element {
-  const { item, type, id } = route.params;
+  const { muscleGroup, type, routine_id } = route.params;
   useEffect(() => {
-    if (item) {
-      getMuscleExercise(item);
+    if (muscleGroup) {
+      getMuscleExercise(muscleGroup);
     } else {
       getExercises();
     }
-  }, [item]);
+  }, [muscleGroup]);
 
   const [queryText, setSearchQuery] = useState("");
   const [exerciseList, setExerciseList] = useState<Exercise[]>([]);
@@ -49,8 +50,10 @@ function ExercisesScreen({
     if (type === "Exercise Details") {
       navigation.navigate("ExerciseDetails", { exercise });
     } else if (type === "Add Exercise") {
+      const routineExercise_id = nanoid();
       navigation.navigate("EditRoutine", {
-        id,
+        routineExercise_id,
+        routine_id,
         exercise_id: exercise.id,
         exercise_name: exercise.name,
       });

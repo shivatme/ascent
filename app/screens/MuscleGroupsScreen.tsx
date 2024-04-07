@@ -16,20 +16,19 @@ function MuscleGroupsScreen({
   navigation,
   route,
 }: MuscleGroupsScreenProps): JSX.Element {
-  const { type, id } = route.params;
+  const { type, routine_id } = route.params;
 
-  function handlePress(item: string | null) {
+  function handlePress(muscleGroup: string | null) {
     if (type === "Exercises") {
       navigation.navigate("Exercises", {
-        item: item,
+        muscleGroup,
         type: "Exercise Details",
-        id,
       });
     } else if (type === "Add Exercise") {
       navigation.navigate("Exercises", {
-        item: item,
+        muscleGroup: muscleGroup,
         type: "Add Exercise",
-        id,
+        routine_id,
       });
     }
   }

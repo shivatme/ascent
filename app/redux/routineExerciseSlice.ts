@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
-import { Routine, RoutineExercise } from "../types";
+import { EditRoutineExercise, Routine, RoutineExercise } from "../types";
 import DBRoutines from "../database/routines";
 import { RootState } from "./store";
 
@@ -23,14 +23,15 @@ export const routineExerciseSlice = createSlice({
   initialState,
   reducers: {
     addRoutineExercise(state: RoutineExerciseState, action) {
-      const id = nanoid();
-      const sets_data = `[
-        {"reps": 8, "weight": 0},
-        {"reps": 8, "weight": 0},
-        {"reps": 8, "weight": 0}
-      ]`;
-      const routineExercise = {
-        id,
+      // const id = nanoid();
+      const sets_data = [
+        { reps: 8, weight: 0 },
+        { reps: 8, weight: 0 },
+        { reps: 8, weight: 0 },
+      ];
+      console.log();
+      const routineExercise: EditRoutineExercise = {
+        id: action.payload.id,
         routine_id: action.payload.routine_id,
         exercise_id: action.payload.exercise_id,
         name: action.payload.exercise_name,
@@ -45,11 +46,9 @@ export const routineExerciseSlice = createSlice({
         (exercise) => exercise.id === id
       );
       if (existingExercise) {
-        let setsArray = JSON.parse(existingExercise.sets_data);
         let newSetReps = 8;
         let newSet = { reps: newSetReps, weight: 0 };
-        setsArray = [...setsArray, newSet];
-        existingExercise.sets_data = JSON.stringify(setsArray);
+        existingExercise.sets_data = [...existingExercise.sets_data, newSet];
       }
     },
     subtractExerciseSet(state: RoutineExerciseState, action) {
@@ -65,6 +64,9 @@ export const routineExerciseSlice = createSlice({
         existingExercise.sets_data = JSON.stringify(setsData);
       }
     },
+    setEditRoutineExercise(state) {
+      state.routineExerciseEdit = state.routineExercise;
+    },
   },
   extraReducers(builder) {
     builder
@@ -74,8 +76,10 @@ export const routineExerciseSlice = createSlice({
       .addCase(getRoutineExercise.fulfilled, (state, action) => {
         state.status = "succeeded";
         // console.log(action.payload);
-        state.routineExercise = action.payload;
-        state.routineExerciseEdit = action.payload;
+        // console.log(action.payload, "Asas");
+        state.routineId = action.payload.routine_id;
+        state.routineExercise = action.payload.result;
+        state.routineExerciseEdit = action.payload.result;
       })
       .addCase(
         getRoutineExercise.rejected,
@@ -95,18 +99,24 @@ export const routineExerciseSlice = createSlice({
   },
 });
 
-export const { addRoutineExercise, addExerciseSet, subtractExerciseSet } =
-  routineExerciseSlice.actions;
+export const {
+  addRoutineExercise,
+  addExerciseSet,
+  subtractExerciseSet,
+  setEditRoutineExercise,
+} = routineExerciseSlice.actions;
 
 export default routineExerciseSlice.reducer;
 
 export const getRoutineExercise = createAsyncThunk(
   "routines/getRoutineExercise",
   async (routine_id: string) => {
+    // console.log("abababa");
     const result: RoutineExercise[] = await DBRoutines.getRoutineExercises(
       routine_id
     );
-    return result;
+    // console.log(result, "Asas");
+    return { result, routine_id };
   }
 );
 

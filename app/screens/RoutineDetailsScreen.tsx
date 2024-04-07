@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import {
   getRoutineExercise,
   selectRoutineExercise,
+  setEditRoutineExercise,
 } from "../redux/routineExerciseSlice";
 
 interface RoutineDetailsScreenProps {
@@ -17,22 +18,24 @@ function RoutineDetailsScreen({
   route,
   navigation,
 }: RoutineDetailsScreenProps): JSX.Element {
-  const { id } = route.params;
+  const { routine_id } = route.params;
+  // console.log(routine_id);
 
   const dispatch = useAppDispatch();
   const routineId = useAppSelector((state) => state.routineExercises.routineId);
+  // console.log(routineId, "sds");
   const exercises = useAppSelector(selectRoutineExercise);
 
   useEffect(() => {
-    if (routineId !== id) {
-      console.log("asasasas");
-      dispatch(getRoutineExercise(id));
+    if (routineId !== routine_id) {
+      console.log("Getting exercises for ", routine_id);
+      dispatch(getRoutineExercise(routine_id));
     }
   }, [routineId, dispatch]);
 
   return (
     <View style={styles.container}>
-      <Text>{id}</Text>
+      <Text>{routine_id}</Text>
       {exercises.length !== 0 ? (
         <>
           <View>
@@ -47,12 +50,13 @@ function RoutineDetailsScreen({
       ) : (
         <>
           <Pressable
-            onPress={() =>
+            onPress={() => {
+              dispatch(setEditRoutineExercise());
               navigation.navigate("MuscleGroups", {
                 type: "Add Exercise",
-                id: id,
-              })
-            }
+                routine_id,
+              });
+            }}
             style={styles.addExercises}
           >
             <Text>Add Exercises</Text>
@@ -71,7 +75,7 @@ function RoutineDetailsScreen({
           onPress={() =>
             navigation.navigate("MuscleGroups", {
               type: "Add Exercise",
-              id: id,
+              routine_id,
             })
           }
           title="Start"
@@ -85,11 +89,12 @@ function RoutineDetailsScreen({
         }}
       >
         <Button1
-          onPress={() =>
+          onPress={() => {
+            dispatch(setEditRoutineExercise());
             navigation.navigate("EditRoutine", {
-              id: id,
-            })
-          }
+              routine_id,
+            });
+          }}
           title="Edit"
         />
       </View>

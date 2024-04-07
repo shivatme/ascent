@@ -44,11 +44,8 @@ function RoutinesScreen({ navigation }: RoutinesScreenProps): JSX.Element {
     const id = nanoid();
     dispatch(addNewRoutine({ id, name, day }));
 
-    const newRoutine = routines.find((routine) => routine.id === id);
-    if (newRoutine) {
-      setModalVisible(false);
-      navigation.navigate("RoutineDetails", { id });
-    } else console.warn("failed");
+    setModalVisible(false);
+    navigation.navigate("RoutineDetails", { routine_id: id });
   };
 
   const handleDeleteRoutine = (routine: Routine) => {
@@ -77,7 +74,6 @@ function RoutinesScreen({ navigation }: RoutinesScreenProps): JSX.Element {
         onPress={() =>
           navigation.navigate("MuscleGroups", {
             type: "Exercises",
-            id: null,
           })
         }
       >
@@ -93,7 +89,7 @@ function RoutinesScreen({ navigation }: RoutinesScreenProps): JSX.Element {
         <Pressable
           key={routine.id}
           onPress={() =>
-            navigation.navigate("RoutineDetails", { id: routine.id })
+            navigation.navigate("RoutineDetails", { routine_id: routine.id })
           }
         >
           <ListItem2

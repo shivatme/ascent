@@ -22,7 +22,6 @@ function ExerciseDetailsScreen({
       <Text style={styles.text}>{exercise.category}</Text>
       <Text style={styles.text}>{exercise.instructions}</Text>
       <Text style={styles.text}>{exercise.primaryMuscles}</Text>
-      {/* <Text style={styles.text}>{}</Text> */}
     </View>
   );
 }

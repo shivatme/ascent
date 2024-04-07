@@ -25,15 +25,16 @@ const deleteRoutine = async (routine: Routine) => {
 };
 
 const getRoutineExercises = async (routine_id: string) => {
+  // console.log("db");
   const result = await db.getAllAsync<RoutineExercise>(
-    `SELECT routine_exercises.id, name, sets_data
+    `SELECT routine_exercises.id, name, sets_json as sets_data
     FROM routine_exercises
     JOIN exercises
         ON routine_exercises.exercise_id=exercises.id
         WHERE routine_id=?;`,
     [routine_id]
   );
-
+  // console.log("db", result);
   return result;
 };
 

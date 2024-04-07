@@ -7,7 +7,15 @@ export interface Routine {
 export interface RoutineExercise {
   id: string;
   name: string;
-  sets_data: string;
+  sets_data: object;
+}
+
+export interface EditRoutineExercise {
+  id: string;
+  sets_data: object;
+  routine_id: string;
+  exercise_id: string;
+  name: string;
 }
 
 export interface Muscles {
