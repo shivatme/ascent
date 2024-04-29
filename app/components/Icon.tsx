@@ -5,7 +5,7 @@ import colors from "../config/colors";
 import { TouchableOpacity } from "react-native";
 
 function Icon({
-  name,
+  name = "home",
   size = 40,
   backgroundColor = colors.light,
   iconColor = colors.dark,

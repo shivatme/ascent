@@ -7,14 +7,19 @@ export interface Routine {
 export interface RoutineExercise {
   id: string;
   name: string;
-  sets_data: object;
+  sets_data: SetData[];
+}
+
+interface SetData {
+  reps: number;
+  weight: number;
 }
 
 export interface EditRoutineExercise {
   id: string;
-  sets_data: object;
-  routine_id: string;
-  exercise_id: string;
+  sets_data: SetData[]; // Declare sets_data as an array of SetData
+  routine_id?: string;
+  exercise_id?: string;
   name: string;
 }
 

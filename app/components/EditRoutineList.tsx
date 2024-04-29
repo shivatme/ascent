@@ -5,12 +5,12 @@ import Icon from "./Icon";
 import { RoutineExercise } from "../types";
 
 interface ListItem3Props {
-  name: string;
-  id: string;
+  name?: string;
+  id?: string;
   onPress?: Function;
-  sets_data: string;
-  onDelete: Function;
-  quantity: number;
+  sets_data?: string;
+  onDelete?: Function;
+  quantity?: number;
   onPressMinus: Function;
   onPressPlus: Function;
   item: RoutineExercise;
@@ -23,12 +23,8 @@ function ListItem3({
   onPressMinus,
   onPressPlus,
 }: ListItem3Props): JSX.Element {
-  const setsData = JSON.parse(item.sets_data);
-  // console.log(item);
+  const setsData = item.sets_data;
   const numberOfSets = Object.keys(setsData).length;
-
-  // console.log(numberOfSets);
-  // console.log(sets);
   return (
     <View style={styles.container}>
       <AppText numberOfLines={1} style={styles.name}>
@@ -39,7 +35,6 @@ function ListItem3({
         <AppText style={styles.quantity}>{numberOfSets}</AppText>
         <Icon name={"plus"} onPress={() => onPressPlus(item.id)} />
       </View>
-      {/* <Button title="Delete" onPress={() => onDelete(id)} /> */}
     </View>
   );
 }

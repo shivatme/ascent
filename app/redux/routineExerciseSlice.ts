@@ -5,7 +5,7 @@ import { RootState } from "./store";
 
 export interface RoutineExerciseState {
   routineExercise: RoutineExercise[];
-  routineExerciseEdit: RoutineExercise[];
+  routineExerciseEdit: EditRoutineExercise[];
   routineId: string | null;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null | undefined;
@@ -29,7 +29,7 @@ export const routineExerciseSlice = createSlice({
         { reps: 8, weight: 0 },
         { reps: 8, weight: 0 },
       ];
-      console.log();
+
       const routineExercise: EditRoutineExercise = {
         id: action.payload.id,
         routine_id: action.payload.routine_id,
@@ -53,15 +53,10 @@ export const routineExerciseSlice = createSlice({
     },
     subtractExerciseSet(state: RoutineExerciseState, action) {
       const id = action.payload;
-      const existingExercise = state.routineExerciseEdit.find(
-        (exercise) => exercise.id === id
-      );
+      const existingExercise: EditRoutineExercise | undefined =
+        state.routineExerciseEdit.find((exercise) => exercise.id === id);
       if (existingExercise) {
-        const setsData = JSON.parse(existingExercise.sets_data);
-        let setKeys = Object.keys(setsData);
-        let lastSetName = setKeys[setKeys.length - 1];
-        delete setsData[lastSetName];
-        existingExercise.sets_data = JSON.stringify(setsData);
+        existingExercise.sets_data.pop();
       }
     },
     setEditRoutineExercise(state) {
@@ -122,7 +117,6 @@ export const getRoutineExercise = createAsyncThunk(
 
 export const saveRoutine = createAsyncThunk("posts/saveRoutine", async () => {
   // console.log(item);
-
   // const result = await DBRoutines.addRoutineExercise(
   //   item.routine_id,
   //   item.exercise_id,
@@ -134,8 +128,7 @@ export const saveRoutine = createAsyncThunk("posts/saveRoutine", async () => {
   //   routine.name,
   //   routine.day
   // );
-
-  return item.routine_id, item.exercise_id, sets_data;
+  // return item.routine_id, item.exercise_id, sets_data;
 });
 // async function addExercise(routine_id: string, exercise_id: string) {
 //   const result = await DBRoutines.addRoutineExercise(routine_id, exercise_id);

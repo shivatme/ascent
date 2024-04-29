@@ -19,11 +19,9 @@ function RoutineDetailsScreen({
   navigation,
 }: RoutineDetailsScreenProps): JSX.Element {
   const { routine_id } = route.params;
-  // console.log(routine_id);
 
   const dispatch = useAppDispatch();
   const routineId = useAppSelector((state) => state.routineExercises.routineId);
-  // console.log(routineId, "sds");
   const exercises = useAppSelector(selectRoutineExercise);
 
   useEffect(() => {

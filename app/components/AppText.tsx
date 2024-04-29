@@ -6,6 +6,7 @@ import defaultStyles from "../config/styles";
 interface AppTextProps {
   children: ReactNode;
   style?: TextStyle;
+  numberOfLines?: number;
 }
 
 function AppText({
