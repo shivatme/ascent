@@ -25,7 +25,7 @@ import {
 } from "../redux/routineSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { nanoid } from "@reduxjs/toolkit";
-import { useSQLiteContext } from "expo-sqlite/next";
+import { useSQLiteContext } from "expo-sqlite";
 
 const screenHeight = Dimensions.get("window").height;
 

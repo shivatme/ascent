@@ -1,4 +1,4 @@
-import * as SQLite from "expo-sqlite/next";
+import * as SQLite from "expo-sqlite";
 import { Exercise, Routine, RoutineExercise } from "../types";
 
 const db = SQLite.openDatabaseSync("Ascent.db");

@@ -2,17 +2,16 @@ import "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { NavigationContainer, DarkTheme } from "@react-navigation/native";
-import AppNavigator from "./app/navigation/AppNavigator";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SystemUI from "expo-system-ui";
 
-import * as SQLite from "expo-sqlite/next";
+import * as SQLite from "expo-sqlite";
 import {
   SQLiteProvider,
   useSQLiteContext,
   type SQLiteDatabase,
-} from "expo-sqlite/next";
+} from "expo-sqlite";
 
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
